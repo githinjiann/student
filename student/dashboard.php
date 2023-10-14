@@ -32,7 +32,7 @@ if (!isset($_SESSION['user_data'])) {
                 <a class="nav-link font-weight-bold" href="index.php">Student portal</a>
             </li>
             <li class="nav-item">
-    <a class="nav-link font-weight-bold" href="http://localhost/student/admin/admin_panel.php">Admin panel</a>
+    <a class="nav-link font-weight-bold" href="logout.php">Logout</a>
 </li>
 
         </ul>

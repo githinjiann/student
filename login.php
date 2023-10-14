@@ -8,6 +8,7 @@ session_start();
 // Initialize variables
 $courseCode = "";
 $password = "";
+$errorMessage = ""; // Initialize error message
 
 // Check if the login form has been submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -45,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: student/dashboard.php');
             exit;
         } else {
-            // Login failed, display an error message or redirect to an error page
+            // Login failed, display an error message
             $errorMessage = "Login failed. Please check your credentials.";
         }
 
@@ -57,9 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-<!-- Rest of your HTML code for the login page -->
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -93,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: green; /* Bootstrap primary color */
         }
 
-        /* Center align the button */
+        /* Center align and style the login button */
         .center-btn {
             text-align: center;
         }
@@ -120,6 +118,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             text-align: center;
             margin-top: 10px;
         }
+
+        /* Add margin to the back-to-home link */
+        .back-to-home {
+            margin-top: 10px;
+        }
+
+        /* Header styling */
+        .header {
+            text-align: center;
+            font-size: 24px;
+            color: #0099cc; /* Custom header color */
+        }
     </style>
 </head>
 <body>
@@ -128,29 +138,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1 class="form-title">Student Login</h1>
 
         <!-- Error message for login failures -->
-        <?php if (isset($errorMessage)) { ?>
+        <?php if (!empty($errorMessage)) { ?>
             <p class="error-message"><?php echo $errorMessage; ?></p>
         <?php } ?>
 
         <!-- Login Form -->
-        <form action="login.php" method="POST">
-            <!-- Course Code Field -->
-            <div class="mb-3">
-                <label for="courseCode" class="form-label">Course Code</label>
-                <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter or paste your course code" required>
-            </div>
+       <!-- Login Form -->
+<form action="login.php" method="POST">
+    <!-- Course Code Field -->
+    <div class="mb-3">
+        <label for="courseCode" class="form-label">Course Code</label>
+        <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter or paste your course code" required>
+    </div>
 
-            <!-- Password Field -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
+    <!-- Password Field -->
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
 
-            <!-- Center align and style the login button -->
-            <div class="center-btn">
-                <button type="submit" class="btn btn-primary login-btn">Login</button>
-            </div>
-        </form>
+    <!-- Center align and style the login button -->
+    <div class="center-btn">
+        <button type="submit" class="btn btn-primary login-btn">Login</button>
+    </div>
+
+    <!-- Add a Register link below the login form -->
+    <div class="center-btn">
+        <p>Don't have an account? <a href="register.php">Register here</a></p>
+    </div>
+</form>
+
+        <!-- Back to Home Link -->
+        <div class="back-to-home text-center">
+            <a href="dashboard.php">Back to Home</a>
+        </div>
     </div>
 
     <!-- Include Bootstrap JS and jQuery from a CDN or your project's local files -->

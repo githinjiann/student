@@ -2,14 +2,17 @@
 // Connect to your database using PDO
 require_once("../connect.php");
 
-
 // Query to retrieve student registration information from the student_courses table
 $sql = "SELECT student_id, units, semester, grades FROM student_courses";
-
 $stmt = $conn->prepare($sql);
 $stmt->execute();
-
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Count the number of registered students
+$countSql = "SELECT COUNT(DISTINCT student_id) AS student_count FROM student_courses";
+$countStmt = $conn->prepare($countSql);
+$countStmt->execute();
+$studentCount = $countStmt->fetch(PDO::FETCH_ASSOC)['student_count'];
 ?>
 
 <!DOCTYPE html>
@@ -22,6 +25,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="container mt-3">
         <h2>Student Information</h2>
+        <p>Total Registered Students: <?php echo $studentCount; ?></p>
         <table class="table">
             <thead>
                 <tr>
@@ -29,13 +33,14 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <th>Unit Code</th>
                     <th>Unit Name</th>
                     <th>Grades</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 if (empty($result)) {
                     // Handle no records found
-                    echo "<tr><td colspan='4'>No records found</td></tr>";
+                    echo "<tr><td colspan='5'>No records found</td></tr>";
                 } else {
                     foreach ($result as $row) {
                         echo "<tr>";
@@ -49,10 +54,19 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <input type="hidden" name="semester" value="<?php echo $row["semester"]; ?>">
                             <input type="hidden" name="unit_code" value="<?php echo $row["units"]; ?>">
                             <input type="text" name="grades" value="<?php echo isset($row["grades"]) ? $row["grades"] : ''; ?>">
-                            <button type="submit">Update</button>
+                            
                         </form>
                 <?php
                         echo "</td>";
+                ?>
+                        <td>
+                            <form method="POST" action="delete_student.php">
+                                <input type="hidden" name="student_id" value="<?php echo $row["student_id"]; ?>">
+                                <input type="hidden" name="unit_code" value="<?php echo $row["units"]; ?>">
+                                <button type="submit">Delete Student</button>
+                            </form>
+                        </td>
+                <?php
                         echo "</tr>";
                     }
                 }

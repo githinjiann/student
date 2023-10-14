@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the entered credentials are valid
     if ($enteredUsername === $defaultUsername && $enteredPassword === $defaultPassword) {
         // Redirect to the admin dashboard (admin_dashboard.php)
-        header("Location: update_grades.php");
+        header("Location: admin_dashboard.php");
         exit(); // Ensure that the script stops here and does not continue executing
 
         // You can add further authentication and session management here if needed

@@ -17,9 +17,7 @@
     <a class="nav-link" href="admin_login.php" style="font-weight: bold;">Login</a>
 </li>
 
-<li class="nav-item">
-    <a class="nav-link" href="update_grades.php" style="font-weight: bold;">Results Updates</a>
-</li>
+
 
             </ul>
         </div>

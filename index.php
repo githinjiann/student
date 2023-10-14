@@ -58,9 +58,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="about-link">About</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="register.php">Login</a>
-                </li>
+                <!-- Modify the "Login" link to have an ID for easy access -->
+<li class="nav-item">
+    <a class="nav-link" href="#" id="login-link"> Student Login</a>
+    <li class="nav-item">
+    <a class="nav-link" href="http://localhost/student/admin/admin_panel.php">Admin Login</a>
+</li>
+
+
 
                 <li class="nav-item">
                     <a class="nav-link" href="apply.php">Apply</a>
@@ -113,6 +118,23 @@ Egerton University is headquartered at Njoro main campus. The main campus also h
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script>
+    // JavaScript to determine the redirection
+    document.addEventListener("DOMContentLoaded", function() {
+        var loginLink = document.getElementById("login-link");
+
+        // Check if the user has applied (you can change this condition)
+        var userHasApplied = true; // Change to true or false based on your logic
+
+        if (userHasApplied) {
+            // If the user has applied, set the login link to the login page
+            loginLink.href = "login.php";
+        } else {
+            // If the user has not applied, set the login link to the register page
+            loginLink.href = "register.php";
+        }
+    });
+</script>
 <script>
     // JavaScript to toggle visibility of the additional information section
     document.getElementById("about-link").addEventListener("click", function() {

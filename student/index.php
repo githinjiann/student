@@ -67,9 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <!-- Link to the "Results" page -->
                 <a class="nav-link font-weight-bold" href="results.php">Results</a>
             </li>
-            <li class="nav-item">
-    <a class="nav-link font-weight-bold" href="logout.php">Logout</a>
-</li>
+           
 
         </ul>
     </div>
