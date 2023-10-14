@@ -30,9 +30,6 @@ $unitsForSemester2 = [
     'SIT 223' => 'Software Quality Assurance',
 ];
 
-// Initialize an array to store the selected units for the current semester
-$selectedUnits = [];
-
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if the registration data is provided
@@ -43,13 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Include your database connection code here
         try {
-           
-
-           
-
-            // Execute the table creation SQL
-            
-
             // Prepare and execute the SQL query to insert data into the database
             $stmt = $conn->prepare("INSERT INTO student_courses (student_id, semester, units) VALUES (:student_id, :semester, :units)");
 
@@ -66,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Close the database connection
             $conn = null;
 
-            // Redirect to the index page (change 'index.php' to the actual URL of your index page)
+            // Redirect to the dashboard page after successful registration
             header('Location: dashboard.php');
             exit();
         } catch (PDOException $e) {
