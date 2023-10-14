@@ -1,6 +1,8 @@
 <?php
 // Start the session
+require_once('../connect.php');
 session_start();
+ 
 
 // Check if the user is logged in (authenticated)
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
@@ -8,17 +10,11 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
     $studentId = $_SESSION['course_code'];
 
     // Include your database configuration here
-    $dbConfig = [
-        'host' => 'localhost',
-        'dbname' => 'student', // Change to your database name
-        'user' => 'root',      // Change to your database username
-        'password' => '',      // Change to your database password
-    ];
+   
 
-    try {
+    
         // Create a PDO database connection
-        $pdo = new PDO("mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']}", $dbConfig['user'], $dbConfig['password']);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+       
 
         // Initialize selected semester
         $selectedSemester = '';
@@ -27,10 +23,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['semester'])) {
             $selectedSemester = $_POST['semester'];
         }
-    } catch (PDOException $e) {
-        // Handle database connection errors here
-        echo "Database Connection Error: " . $e->getMessage();
-    }
+    
 } else {
     // If the user is not logged in, you can redirect them to a login page
     header('Location: login.php'); // Redirect to the login page
@@ -134,7 +127,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
 
                             // Fetch and display the grades from the database based on the selected semester
                             $gradesQuery = "SELECT grades FROM student_courses WHERE student_id = :student_id AND semester = :semester AND units = :unit";
-                            $stmtGrades = $pdo->prepare($gradesQuery);
+                            $stmtGrades = $conn->prepare($gradesQuery);
                             $stmtGrades->bindParam(':student_id', $studentId, PDO::PARAM_STR);
                             $stmtGrades->bindParam(':semester', $selectedSemester, PDO::PARAM_STR);
                             $stmtGrades->bindParam(':unit', $unitCode, PDO::PARAM_STR);

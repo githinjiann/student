@@ -1,11 +1,6 @@
 <?php
 // Database configuration
-$dbConfig = [
-    'host' => 'localhost',
-    'dbname' => 'student', // Replace with your database name
-    'user' => 'root',      // Replace with your database username
-    'password' => '',      // Replace with your database password
-];
+require_once("../connect.php");
 
 // Start a session to manage user login state
 session_start();
@@ -26,24 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $selectedUnits = $_POST['units'];
 
         // Create a PDO connection
-        $conn = new PDO("mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']}", $dbConfig['user'], $dbConfig['password']);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Enable error reporting
+        
 
         try {
             // Insert the selected units into the database
-            $insertSql = "INSERT INTO registrations (student_id, unit_code, semester, status) VALUES (:student_id, :unit_code, :semester, 'Pending')";
+        
             $insertStmt = $conn->prepare($insertSql);
 
-            foreach ($selectedUnits as $unitCode) {
-                // Bind parameters and execute the statement
-                $insertStmt->bindParam(':student_id', $studentId, PDO::PARAM_STR);
-                $insertStmt->bindParam(':unit_code', $unitCode, PDO::PARAM_STR);
-                // You may want to get the semester value from the form as well.
-                // For this example, I'm assuming the semester is hardcoded as 'Semester 1'.
-                $semester = 'Semester 1';
-                $insertStmt->bindParam(':semester', $semester, PDO::PARAM_STR);
-                $insertStmt->execute();
-            }
 
             // Return a success message
             // You can add a success message here if needed

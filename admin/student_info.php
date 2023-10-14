@@ -1,27 +1,15 @@
 <?php
-// Connect to your database here
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "student";
+// Connect to your database using PDO
+require_once("../connect.php");
 
-// Create a connection
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 // Query to retrieve student registration information from the student_courses table
 $sql = "SELECT student_id, units, semester, grades FROM student_courses";
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->execute();
 
-if (!$result) {
-    // Handle SQL errors
-    die("SQL Error: " . $conn->error);
-}
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -45,31 +33,29 @@ if (!$result) {
             </thead>
             <tbody>
                 <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
+                if (empty($result)) {
+                    // Handle no records found
+                    echo "<tr><td colspan='4'>No records found</td></tr>";
+                } else {
+                    foreach ($result as $row) {
                         echo "<tr>";
                         echo "<td>" . $row["student_id"] . "</td>";
                         echo "<td>" . $row["units"] . "</td>";
                         echo "<td>" . $row["semester"] . "</td>";
                         echo "<td>";
                 ?>
-                <form method="POST" action="update_grades.php">
-                    <input type="hidden" name="student_id" value="<?php echo $row["student_id"]; ?>">
-                    <input type="hidden" name="semester" value="<?php echo $row["semester"]; ?>">
-                    <input type="hidden" name="unit_code" value="<?php echo $row["units"]; ?>">
-                    <input type="text" name="grades" value="<?php echo isset($row["grades"]) ? $row["grades"] : ''; ?>">
-                    <button type="submit">Update</button>
-                </form>
+                        <form method="POST" action="update_grades.php">
+                            <input type="hidden" name="student_id" value="<?php echo $row["student_id"]; ?>">
+                            <input type="hidden" name="semester" value="<?php echo $row["semester"]; ?>">
+                            <input type="hidden" name="unit_code" value="<?php echo $row["units"]; ?>">
+                            <input type="text" name="grades" value="<?php echo isset($row["grades"]) ? $row["grades"] : ''; ?>">
+                            <button type="submit">Update</button>
+                        </form>
                 <?php
                         echo "</td>";
                         echo "</tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='4'>No records found</td></tr>";
                 }
-
-                // Close the database connection
-                $conn->close();
                 ?>
             </tbody>
         </table>

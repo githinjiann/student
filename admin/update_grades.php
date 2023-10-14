@@ -1,5 +1,6 @@
 <?php
 // Start the session
+require_once("../connect.php");
 session_start();
 
 $unitsForSemester1 = [
@@ -24,16 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $unitCode = $_POST['unit_code'];
     $newGrades = $_POST['grades'];
 
-    // Connect to the database
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $database = "student";
+   
 
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    
         // Prepare the SQL statement to update grades
         $sql = "UPDATE student_courses SET grades = :grades WHERE student_id = :student_id AND units = :unit_code AND semester = :semester";
         $stmt = $conn->prepare($sql);

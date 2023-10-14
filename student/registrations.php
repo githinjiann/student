@@ -1,11 +1,6 @@
 <?php
 // Include your database configuration here
-$dbConfig = [
-    'host' => 'localhost',
-    'dbname' => 'student', // Change to your database name
-    'user' => 'root',      // Change to your database username
-    'password' => '',      // Change to your database password
-];
+require_once("../connect.php");
 
 // Start a session to manage user login state
 session_start();
@@ -23,7 +18,7 @@ $studentId = $_SESSION['course_code'];
 $unitsForSemester1 = [
     'SIT 215' => 'Computer',
     'SIT 212' => 'Cloud Computing',
-    'SIT 213' => 'Mobile Computing',
+    'SIT 213' => 'Mobile Computing', 
     'SIT 214' => 'Database Management',
 ];
 
@@ -48,23 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Include your database connection code here
         try {
-            $pdo = new PDO("mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']}", $dbConfig['user'], $dbConfig['password']);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+           
 
-            // Create the student_courses table if it doesn't exist (you can remove this if the table already exists)
-            $createTableSQL = "
-            CREATE TABLE IF NOT EXISTS student_courses (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                student_id VARCHAR(255) NOT NULL,
-                semester VARCHAR(255) NOT NULL,
-                units TEXT NOT NULL
-            )";
+           
 
             // Execute the table creation SQL
-            $pdo->exec($createTableSQL);
+            
 
             // Prepare and execute the SQL query to insert data into the database
-            $stmt = $pdo->prepare("INSERT INTO student_courses (student_id, semester, units) VALUES (:student_id, :semester, :units)");
+            $stmt = $conn->prepare("INSERT INTO student_courses (student_id, semester, units) VALUES (:student_id, :semester, :units)");
 
             foreach ($selectedUnits as $unitCode) {
                 // Bind parameters
@@ -77,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Close the database connection
-            $pdo = null;
+            $conn = null;
 
             // Redirect to the index page (change 'index.php' to the actual URL of your index page)
             header('Location: dashboard.php');
