@@ -1,5 +1,4 @@
 <?php
-
 // Include your database configuration here
 $dbConfig = [
     'host' => 'localhost',
@@ -33,7 +32,7 @@ $unitsForSemester2 = [
     'SIT 220' => 'Group Project',
     'SIT 221' => 'IoT',
     'SIT 222' => 'Computer Project',
-    'SIT 223' => 'Software Quality Assuarance',
+    'SIT 223' => 'Software Quality Assurance',
 ];
 
 // Initialize an array to store the selected units for the current semester
@@ -90,22 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!-- Rest of your HTML code -->
-
-<!-- Rest of your HTML code -->
-
-<!-- Rest of your HTML code -->
-
-
-
-<!-- Rest of your HTML code -->
-
-<!-- Rest of your HTML code -->
-
-<!-- Rest of your HTML code -->
-
-
-<!-- HTML for the unit registration form -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         th {
-            background-color: #4CAF50; /* Header background color */
+            background-color: blue; /* Header background color */
             color: white; /* Header text color */
         }
 
@@ -154,10 +137,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="alert alert-danger" id="errorMessage" style="display: none;"></div>
 
     <h2>Unit Registration</h2>
-    <form method="POST" action="registrations.php" id="registrationForm">
+    <form method="POST" action="registrations.php" id="registrationForm" onsubmit="return validateForm();">
         <!-- Semester selection -->
         <div class="form-group">
-            <label for="semester">Select Semester:</label>
+            
             <select class="form-control" id="semester" name="semester">
                 <option value="">Select the semester please</option>
                 <option value="Semester 1">Semester 1</option>
@@ -186,6 +169,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     const form = document.getElementById('registrationForm');
     const semesterSelect = document.getElementById('semester');
     const unitSelection = document.getElementById('unitSelection');
+
+    // Function to validate the semester selection
+    function validateForm() {
+        const selectedSemester = semesterSelect.value;
+
+        if (selectedSemester === "") {
+            alert('Please select the semester before submitting the form.');
+            return false;
+        }
+    }
 
     // Function to update the displayed units based on the selected semester
     function updateUnits() {
@@ -261,9 +254,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!arraysEqual(requiredUnits, selectedUnits)) {
             e.preventDefault(); // Prevent the form from submitting
             alert('Please select all units for the selected semester.'); // Show an alert message
-        } else {
-            // If all units are selected, show a success message
-            alert('All units are selected. Registration successful!');
         }
     });
 
@@ -271,6 +261,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     function arraysEqual(arr1, arr2) {
         return arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
     }
+
+    
 </script>
 </body>
 </html>

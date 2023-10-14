@@ -68,8 +68,8 @@ $conn = null;
         /* Custom styles for the registration form */
         .container {
             text-align: center; /* Center align content in the container */
-            max-width: 600px; /* Adjust the maximum width as needed */
-            background-color: #b3ffb3; /* Background color for the container */
+            max-width: 700px; /* Adjust the maximum width as needed */
+            background-color: skyblue; /* Background color for the container */
             padding: 30px;
             border-radius: 10px; /* Add rounded corners to the container */
             box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2); /* Add a subtle shadow */
@@ -108,7 +108,7 @@ $conn = null;
 <body>
     <div class="container mt-5">
         <!-- Title with styling -->
-        <h1 class="form-title">Student Registration  Form</h1>
+        <h1 class="form-title">Application Form</h1>
 
         <!-- Registration Failure Message -->
         <?php echo $registrationMessage; ?>
@@ -152,7 +152,7 @@ $conn = null;
             
 
             <!-- Register Button -->
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
         </form>
     </div>
 

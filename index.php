@@ -61,6 +61,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="register.php">Login</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="apply.php">Apply</a>
+                </li>
+                
             </ul>
         </div>
     </div>

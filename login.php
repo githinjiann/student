@@ -78,9 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         /* Additional CSS for styling */
         .container {
-            max-width: 400px;
+            max-width: 500px;
             margin-top: 50px;
-            background-color: skyblue; /* Background color for the container */
+            background-color: #b3ffb3; /* Background color for the container */
             padding: 20px;
             border-radius: 10px; /* Add rounded corners to the container */
             box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2); /* Add a subtle shadow */

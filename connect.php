@@ -4,7 +4,7 @@ $dbConfig = [
     'host' => 'localhost',
     'dbname' => 'student',
     'user' => 'root',
-    'password' => '123',
+    'password' => '',
 ];
 
 try {
