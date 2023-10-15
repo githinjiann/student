@@ -6,6 +6,11 @@
     <!-- Include Bootstrap CSS (you'll need to have Bootstrap files or CDN links) -->
     <link rel="stylesheet" href="path-to-bootstrap-css/bootstrap.min.css">
     <style>
+        .navbar {
+            background-color: skyblue;
+            height: 70px; /* Increase the height to your preferred value */
+        }
+
         .frame {
             border: 10px solid #333;
             padding: 25px;
@@ -42,6 +47,33 @@
     </script>
 </head>
 <body>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... (your existing meta tags and style links) ... -->
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#" style="color: green; font-size: 27px;">Egerton University</a>
+            <ul class="navbar-nav ms-auto"> <!-- Added this ul for right-aligned links -->
+                <li class="nav-item">
+                    <a class="nav-link" href="logout.php">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<!-- ... (your existing content) ... -->
+
+<script src="path-to-bootstrap-js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
     <div class="container mt-4">
         <div class="text-center"> <!-- Center-align the title -->
             <h1 class="card-title">Welcome to the Admin Dashboard</h1>

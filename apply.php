@@ -106,6 +106,8 @@ $conn = null;
     </style>
 </head>
 <body>
+
+
     <div class="container mt-5">
         <!-- Title with styling -->
         <h1 class="form-title">Application Form</h1>

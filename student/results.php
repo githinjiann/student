@@ -69,6 +69,15 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
     </style>
 </head>
 <body>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: skyblue;">
+        <div class="container">
+            <a class="navbar-brand mx-auto" href="#" style="color: green;">Egerton University</a>
+        </div>
+    </nav>
+</header>
+
     <div class="container mt-5">
         <h2>Results</h2>
 

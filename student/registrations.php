@@ -40,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Include your database connection code here
         try {
+            // Connect to the database
+            // Include your database connection code here
+            
             // Prepare and execute the SQL query to insert data into the database
             $stmt = $conn->prepare("INSERT INTO student_courses (student_id, semester, units) VALUES (:student_id, :semester, :units)");
 
@@ -104,142 +107,143 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-<div class="container mt-5">
-    <!-- Message at the top initially hidden -->
-    <div class="alert alert-success" id="successMessage" style="display: none;">
-        Registration successful
+
+
+    <div class="container mt-5">
+        <!-- Message at the top initially hidden -->
+        <div class="alert alert-success" id="successMessage" style="display: none;">
+            Registration successful
+        </div>
+
+        <!-- Error message div for displaying validation errors -->
+        <div class="alert alert-danger" id="errorMessage" style="display: none;"></div>
+
+        <h2>Unit Registration</h2>
+        <form method="POST" action="registrations.php" id="registrationForm" onsubmit="return validateForm();">
+            <!-- Semester selection -->
+            <div class="form-group">
+                <select class="form-control" id="semester" name="semester">
+                    <option value="">Select the semester please</option>
+                    <option value="Semester 1">Semester 1</option>
+                    <option value="Semester 2">Semester 2</option>
+                </select>
+            </div>
+
+            <!-- Unit selection (display Semester-specific units) -->
+            <div class="row" id="unitSelection" style="display: none;">
+                <table>
+                    <tr>
+                        <th>Unit Code</th>
+                        <th>Unit Name</th>
+                        <th>Register</th>
+                    </tr>
+                    <!-- Units for Semester 1 and Semester 2 will be dynamically populated here -->
+                </table>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
 
-    <!-- Error message div for displaying validation errors -->
-    <div class="alert alert-danger" id="errorMessage" style="display: none;"></div>
+    <!-- JavaScript to show the table when a semester is selected -->
+    <script>
+        const form = document.getElementById('registrationForm');
+        const semesterSelect = document.getElementById('semester');
+        const unitSelection = document.getElementById('unitSelection');
 
-    <h2>Unit Registration</h2>
-    <form method="POST" action="registrations.php" id="registrationForm" onsubmit="return validateForm();">
-        <!-- Semester selection -->
-        <div class="form-group">
-            
-            <select class="form-control" id="semester" name="semester">
-                <option value="">Select the semester please</option>
-                <option value="Semester 1">Semester 1</option>
-                <option value="Semester 2">Semester 2</option>
-            </select>
-        </div>
+        // Function to validate the semester selection
+        function validateForm() {
+            const selectedSemester = semesterSelect.value;
 
-        <!-- Unit selection (display Semester-specific units) -->
-        <div class="row" id="unitSelection" style="display: none;">
-            <table>
-                <tr>
-                    <th>Unit Code</th>
-                    <th>Unit Name</th>
-                    <th>Register</th>
-                </tr>
-                <!-- Units for Semester 1 and Semester 2 will be dynamically populated here -->
-            </table>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-</div>
-
-<!-- JavaScript to show the table when a semester is selected -->
-<script>
-    const form = document.getElementById('registrationForm');
-    const semesterSelect = document.getElementById('semester');
-    const unitSelection = document.getElementById('unitSelection');
-
-    // Function to validate the semester selection
-    function validateForm() {
-        const selectedSemester = semesterSelect.value;
-
-        if (selectedSemester === "") {
-            alert('Please select the semester before submitting the form.');
-            return false;
-        }
-    }
-
-    // Function to update the displayed units based on the selected semester
-    function updateUnits() {
-        const selectedSemester = semesterSelect.value;
-
-        // Determine which units to display based on the selected semester
-        const unitsToDisplay = (selectedSemester === 'Semester 1') ? <?php echo json_encode($unitsForSemester1); ?> : <?php echo json_encode($unitsForSemester2); ?>;
-
-        // Build the table with the selected units
-        const table = document.createElement('table');
-        table.style.width = '80%';
-        table.style.borderCollapse = 'collapse';
-        table.style.backgroundColor = '#f2f2f2';
-        table.style.fontFamily = 'Arial, sans-serif';
-
-        const headerRow = document.createElement('tr');
-        const header1 = document.createElement('th');
-        header1.textContent = 'Unit Code';
-        const header2 = document.createElement('th');
-        header2.textContent = 'Unit Name';
-        const header3 = document.createElement('th');
-        header3.textContent = 'Register';
-        headerRow.appendChild(header1);
-        headerRow.appendChild(header2);
-        headerRow.appendChild(header3);
-        table.appendChild(headerRow);
-
-        for (const unitCode in unitsToDisplay) {
-            const unitName = unitsToDisplay[unitCode];
-            const row = document.createElement('tr');
-            const cell1 = document.createElement('td');
-            cell1.textContent = unitCode;
-            const cell2 = document.createElement('td');
-            cell2.textContent = unitName;
-            const cell3 = document.createElement('td');
-            const checkbox = document.createElement('input');
-            checkbox.className = 'form-check-input';
-            checkbox.type = 'checkbox';
-            checkbox.name = 'units[]';
-            checkbox.value = unitCode;
-            cell3.appendChild(checkbox);
-
-            row.appendChild(cell1);
-            row.appendChild(cell2);
-            row.appendChild(cell3);
-
-            table.appendChild(row);
+            if (selectedSemester === "") {
+                alert('Please select the semester before submitting the form.');
+                return false;
+            }
         }
 
-        // Remove the existing table (if any) and append the updated one
-        while (unitSelection.firstChild) {
-            unitSelection.removeChild(unitSelection.firstChild);
+        // Function to update the displayed units based on the selected semester
+        function updateUnits() {
+            const selectedSemester = semesterSelect.value;
+
+            // Determine which units to display based on the selected semester
+            const unitsToDisplay = (selectedSemester === 'Semester 1') ? <?php echo json_encode($unitsForSemester1); ?> : <?php echo json_encode($unitsForSemester2); ?>;
+
+            // Build the table with the selected units
+            const table = document.createElement('table');
+            table.style.width = '80%';
+            table.style.borderCollapse = 'collapse';
+            table.style.backgroundColor = '#f2f2f2';
+            table.style.fontFamily = 'Arial, sans-serif';
+
+            const headerRow = document.createElement('tr');
+            const header1 = document.createElement('th');
+            header1.textContent = 'Unit Code';
+            const header2 = document.createElement('th');
+            header2.textContent = 'Unit Name';
+            const header3 = document.createElement('th');
+            header3.textContent = 'Register';
+            headerRow.appendChild(header1);
+            headerRow.appendChild(header2);
+            headerRow.appendChild(header3);
+            table.appendChild(headerRow);
+
+            for (const unitCode in unitsToDisplay) {
+                const unitName = unitsToDisplay[unitCode];
+                const row = document.createElement('tr');
+                const cell1 = document.createElement('td');
+                cell1.textContent = unitCode;
+                const cell2 = document.createElement('td');
+                cell2.textContent = unitName;
+                const cell3 = document.createElement('td');
+                const checkbox = document.createElement('input');
+                checkbox.className = 'form-check-input';
+                checkbox.type = 'checkbox';
+                checkbox.name = 'units[]';
+                checkbox.value = unitCode;
+                cell3.appendChild(checkbox);
+
+                row.appendChild(cell1);
+                row.appendChild(cell2);
+                row.appendChild(cell3);
+
+                table.appendChild(row);
+            }
+
+            // Remove the existing table (if any) and append the updated one
+            while (unitSelection.firstChild) {
+                unitSelection.removeChild(unitSelection.firstChild);
+            }
+            unitSelection.appendChild(table);
+
+            // Show the table when the semester is selected
+            unitSelection.style.display = (selectedSemester !== "") ? 'block' : 'none';
         }
-        unitSelection.appendChild(table);
 
-        // Show the table when the semester is selected
-        unitSelection.style.display = (selectedSemester !== "") ? 'block' : 'none';
-    }
+        // Initially hide the table
+        unitSelection.style.display = 'none';
 
-    // Initially hide the table
-    unitSelection.style.display = 'none';
+        // Call updateUnits when the page loads
+        window.addEventListener('load', updateUnits);
 
-    // Call updateUnits when the page loads
-    window.addEventListener('load', updateUnits);
+        semesterSelect.addEventListener('change', updateUnits);
 
-    semesterSelect.addEventListener('change', updateUnits);
+        form.addEventListener('submit', function (e) {
+            // Check if all units are selected
+            const requiredUnits = Array.from(document.querySelectorAll('input[name="units[]"]')).map(checkbox => checkbox.value);
+            const selectedUnits = Array.from(document.querySelectorAll('input[name="units[]"]:checked')).map(checkbox => checkbox.value);
 
-    form.addEventListener('submit', function (e) {
-        // Check if all units are selected
-        const requiredUnits = Array.from(document.querySelectorAll('input[name="units[]"]')).map(checkbox => checkbox.value);
-        const selectedUnits = Array.from(document.querySelectorAll('input[name="units[]"]:checked')).map(checkbox => checkbox.value);
+            if (!arraysEqual(requiredUnits, selectedUnits)) {
+                e.preventDefault(); // Prevent the form from submitting
+                alert('Please select all units for the selected semester.'); // Show an alert message
+            }
+        });
 
-        if (!arraysEqual(requiredUnits, selectedUnits)) {
-            e.preventDefault(); // Prevent the form from submitting
-            alert('Please select all units for the selected semester.'); // Show an alert message
+        // Function to compare two arrays for equality
+        function arraysEqual(arr1, arr2) {
+            return arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
         }
-    });
 
-    // Function to compare two arrays for equality
-    function arraysEqual(arr1, arr2) {
-        return arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
-    }
-
-    
-</script>
+    </script>
 </body>
 </html>
+

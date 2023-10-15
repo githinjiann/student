@@ -133,6 +133,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
+<style>
+    /* CSS for the header and navbar */
+    header {
+        margin top: 0;
+        padding: 0;
+    }
+
+    nav.navbar {
+        margin: 0;
+        padding: 0;
+    }
+</style>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container" style="max-width: 50%;">
+            <a class="navbar-brand mx-auto" href="#" style="color: green;">Egerton University</a>
+        </div>
+    </nav>
+</header>
+
+
+
     <div class="container">
         <!-- Title with styling -->
         <h1 class="form-title">Student Login</h1>
@@ -170,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Back to Home Link -->
         <div class="back-to-home text-center">
-            <a href="dashboard.php">Back to Home</a>
+            <a href="dashboard.php"></a>
         </div>
     </div>
 

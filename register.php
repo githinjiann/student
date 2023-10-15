@@ -17,13 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Hash the password for security
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Store the user data in a session variable
-    $_SESSION['user_data'] = [
-        'fullName' => $fullName,
-        'email' => $email,
-        'course' => $course,
-        'courseCode' => $courseCode,
-    ];
     // SQL query to insert user data into the database
     $sql = "INSERT INTO users (full_name, email, course, course_code, password) VALUES (:fullName, :email, :course, :courseCode, :hashedPassword)";
 
