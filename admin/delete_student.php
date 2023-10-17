@@ -32,9 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Delete Student</title>
 </head>
+
 <body>
     <h2>Delete Student</h2>
     <form method="POST" action="remove_student.php">
@@ -47,5 +49,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="submit" value="Delete Student">
     </form>
 </body>
-</html>
 
+</html>

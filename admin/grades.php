@@ -1,14 +1,16 @@
 <?php
-require_once ("connect.php"); // Include the database connection script
+require_once("connect.php"); // Include the database connection script
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>View Student</title>
     <!-- Add Bootstrap CSS links here -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container mt-3">
         <h2>update student marks</h2>
@@ -55,8 +57,9 @@ require_once ("connect.php"); // Include the database connection script
             window.location.href = "update_grades.php";
         }
     </script>
-    
+
     <!-- Button for admin to update student results -->
     <button class="btn btn-primary" onclick="redirectToUpdateGradesPage()">Update Student Results</button>
 </body>
+
 </html>

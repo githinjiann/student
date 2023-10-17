@@ -58,9 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,20 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Include Bootstrap CSS from a CDN or your project's local files -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
-        /* Custom background and text color */
-        body {
-            background-color: #f0f0f0; /* Custom background color */
-            color: #333; /* Custom text color */
-        }
-
-        /* Additional CSS for styling */
-        .container {
-            max-width: 500px;
-            margin-top: 50px;
-            background-color: #b3ffb3; /* Background color for the container */
-            padding: 20px;
-            border-radius: 10px; /* Add rounded corners to the container */
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2); /* Add a subtle shadow */
+        .navbar.bg-skyblue {
+            background-color: skyblue;
         }
 
         /* Styling for the title */
@@ -89,26 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             text-align: center;
             text-decoration: underline;
             color: green; /* Bootstrap primary color */
-        }
-
-        /* Center align and style the login button */
-        .center-btn {
-            text-align: center;
-        }
-
-        /* Style for the login button */
-        .login-btn {
-            background-color: green; /* Custom button color */
-            border-color: green; /* Custom button border color */
-            color: white; /* Custom button text color */
-            padding: 10px 20px; /* Custom button padding */
-            border-radius: 5px; /* Add rounded corners to the button */
-        }
-
-        /* Style for the login button on hover */
-        .login-btn:hover {
-            background-color: darkgreen; /* Custom button color on hover */
-            border-color: darkgreen; /* Custom button border color on hover */
         }
 
         /* Error message styling */
@@ -124,38 +92,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 10px;
         }
 
-        /* Header styling */
-        .header {
+        /* Sticky footer */
+        html, body {
+            height: 100%;
+        }
+
+        .wrapper {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        .footer {
+            background-color: black;
+            color: white;
             text-align: center;
-            font-size: 24px;
-            color: #0099cc; /* Custom header color */
+            padding: 20px 0;
         }
     </style>
 </head>
-<body>
-<style>
-    /* CSS for the header and navbar */
-    header {
-        margin top: 0;
-        padding: 0;
-    }
 
-    nav.navbar {
-        margin: 0;
-        padding: 0;
-    }
-</style>
-
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container" style="max-width: 50%;">
-            <a class="navbar-brand mx-auto" href="#" style="color: green;">Egerton University</a>
-        </div>
-    </nav>
-</header>
-
-
-
+<body class="wrapper">
+    <?php include("header.php"); ?>
     <div class="container">
         <!-- Title with styling -->
         <h1 class="form-title">Student Login</h1>
@@ -165,40 +127,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="error-message"><?php echo $errorMessage; ?></p>
         <?php } ?>
 
-        <!-- Login Form -->
-       <!-- Login Form -->
-<form action="login.php" method="POST">
-    <!-- Course Code Field -->
-    <div class="mb-3">
-        <label for="courseCode" class="form-label">Course Code</label>
-        <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter or paste your course code" required>
-    </div>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <!-- Login Form -->
+                <form action="login.php" method="POST">
+                    <!-- Course Code Field -->
+                    <div class="mb-3">
+                        <label for="courseCode" class="form-label">Course Code</label>
+                        <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter or paste your course code" required>
+                    </div>
 
-    <!-- Password Field -->
-    <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-    </div>
+                    <!-- Password Field -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
 
-    <!-- Center align and style the login button -->
-    <div class="center-btn">
-        <button type="submit" class="btn btn-primary login-btn">Login</button>
-    </div>
+                    <!-- Center align and style the login button -->
+                    <div class="center-btn">
+                        <button type="submit" class="btn btn-primary login-btn">Login</button>
+                    </div>
 
-    <!-- Add a Register link below the login form -->
-    <div class="center-btn">
-        <p>Don't have an account? <a href="register.php">Register here</a></p>
-    </div>
-</form>
-
-        <!-- Back to Home Link -->
-        <div class="back-to-home text-center">
-            <a href="dashboard.php"></a>
+                    <!-- Add a Register link below the login form -->
+                    <div class="center-btn">
+                        <p>Don't have an account? <a href="register.php">Register here</a></p>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+    <!-- Back to Home Link -->
+        <div class="back-to-home text-center">
+            <a href="student/dashboard.php"></a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>&copy; 2023 e.u. All rights reserved. Transforming Lives through Quality Education</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- Include Bootstrap JS and jQuery from a CDN or your project's local files -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+OGpamoFVy38MVBnE+I1wojt9z4trjNz7FO1mgF5F5js4me" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
+
 </html>
+

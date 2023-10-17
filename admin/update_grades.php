@@ -25,10 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $unitCode = $_POST['unit_code'];
     $newGrades = $_POST['grades'];
 
-   
+
 
     try {
-    
+
         // Prepare the SQL statement to update grades
         $sql = "UPDATE student_courses SET grades = :grades WHERE student_id = :student_id AND units = :unit_code AND semester = :semester";
         $stmt = $conn->prepare($sql);
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     // Handle cases where the form was not submitted
-    
+
 }
 ?>
 
@@ -66,12 +66,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Student Information</title>
     <!-- Add Bootstrap CSS links here -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+     <style>
+        .navbar.bg-skyblue {
+            background-color: skyblue;
+        }
+        </style>
 </head>
+
 <body>
+     <?php include("header.php"); ?>
     <div class="container mt-3">
         <h2>Student Information</h2>
         <table class="table">
@@ -120,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         } elseif (array_key_exists($row["units"], $unitsForSemester2) && $row["semester"] == 'Semester 2') {
                             $unitName = $unitsForSemester2[$row["units"]];
                         }
-                        
+
                         if (!empty($unitName)) {
                             echo "<tr>";
                             echo "<td>" . $row["student_id"] . "</td>";
@@ -160,4 +168,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Add Bootstrap JavaScript links here -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

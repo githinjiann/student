@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,8 @@
     <style>
         .navbar {
             background-color: skyblue;
-            height: 70px; /* Increase the height to your preferred value */
+            height: 70px;
+            /* Increase the height to your preferred value */
         }
 
         .frame {
@@ -16,22 +18,32 @@
             padding: 25px;
             border-radius: 10px;
             width: 300px;
-            background-color: #f0f0f0; /* Background color for the frame */
-            margin: 0 auto; /* Center the frame horizontally */
+            background-color: #f0f0f0;
+            /* Background color for the frame */
+            margin: 0 auto;
+            /* Center the frame horizontally */
         }
 
         .card-title {
-            text-align: center; /* Center the title text */
-            font-size: 24px; /* Adjust the font size */
-            margin-bottom: 20px; /* Add some spacing below the title */
-            color: #007BFF; /* Custom title text color */
-            font-family: 'Arial', sans-serif; /* Custom font family for the title */
-            font-weight: bold; /* Bold font weight */
-            text-decoration: underline; /* Underline the title text */
+            text-align: center;
+            /* Center the title text */
+            font-size: 24px;
+            /* Adjust the font size */
+            margin-bottom: 20px;
+            /* Add some spacing below the title */
+            color: #007BFF;
+            /* Custom title text color */
+            font-family: 'Arial', sans-serif;
+            /* Custom font family for the title */
+            font-weight: bold;
+            /* Bold font weight */
+            text-decoration: underline;
+            /* Underline the title text */
         }
 
-        .form-check-input:checked + .form-check-label::before {
-            background-color: #007BFF; /* Change the radio button color when selected */
+        .form-check-input:checked+.form-check-label::before {
+            background-color: #007BFF;
+            /* Change the radio button color when selected */
         }
     </style>
     <script>
@@ -46,34 +58,33 @@
         }
     </script>
 </head>
+
 <body>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- ... (your existing meta tags and style links) ... -->
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+    <head>
+    <title>Admin Login</title>
+    <!-- Add Bootstrap CSS and JavaScript links here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar.bg-skyblue {
+            background-color: skyblue;
+        }
+        </style>
+
 </head>
-<body>
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container">
-            <a class="navbar-brand" href="#" style="color: green; font-size: 27px;">Egerton University</a>
-            <ul class="navbar-nav ms-auto"> <!-- Added this ul for right-aligned links -->
-                <li class="nav-item">
-                    <a class="nav-link" href="logout.php">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</header>
+    </head>
 
-<!-- ... (your existing content) ... -->
+    <body>
+         <?php include("header.php");?>
 
-<script src="path-to-bootstrap-js/bootstrap.min.js"></script>
-</body>
-</html>
+        <script src="path-to-bootstrap-js/bootstrap.min.js"></script>
+    </body>
 
-
+    </html>
     <div class="container mt-4">
         <div class="text-center"> <!-- Center-align the title -->
             <h1 class="card-title">Welcome to the Admin Dashboard</h1>
@@ -84,16 +95,22 @@
             <div class="card-body">
                 <h2 class="card-title">Choose an Action</h2>
                 <form action="process_action.php" method="post">
-                    <div class="form-check">
-                        <input type="radio" id="update_grades" name="action" value="update_grades.php" required
-                            class="form-check-input" onclick="redirectToUpdatePage()">
-                        <label class="form-check-label" for="update_grades">Update grades</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" id="view" name="action" value="student_info.php" required
-                            class="form-check-input" onclick="redirectToStudentInfoPage()">
-                        <label class="form-check-label" for="view">View Student</label>
-                    </div>
+              <div class="form-check">
+    <input type="radio" id="update_grades" name="action" value="update_grades.php" required class="form-check-input" onclick="redirectToUpdatePage()">
+    <label class="form-check-label" for="update_grades">
+        <span class="text-primary">Update grades</span>
+    </label>
+</div>
+
+<div class="form-check">
+    <input type="radio" id="view" name="action" value="student_info.php" required class="form-check-input" onclick="redirectToStudentInfoPage()">
+    <label class="form-check-label" for="view">
+        <span class="text-primary">View Student</span>
+    </label>
+</div>
+<p class="dashboard-link">
+                    <a href="logout.php" class="btn btn-danger btn-block">Logout</a>
+                </p>
                 </form>
             </div>
         </div>
@@ -102,4 +119,5 @@
     <!-- Include Bootstrap JS (you'll need to have Bootstrap JS files or CDN links) -->
     <script src="path-to-bootstrap-js/bootstrap.min.js"></script>
 </body>
+
 </html>

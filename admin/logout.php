@@ -14,4 +14,3 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 // Redirect to the admin login page
 header('Location: admin_login.php');
 exit;
-?>

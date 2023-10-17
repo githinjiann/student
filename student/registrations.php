@@ -18,7 +18,7 @@ $studentId = $_SESSION['course_code'];
 $unitsForSemester1 = [
     'SIT 215' => 'Computer',
     'SIT 212' => 'Cloud Computing',
-    'SIT 213' => 'Mobile Computing', 
+    'SIT 213' => 'Mobile Computing',
     'SIT 214' => 'Database Management',
 ];
 
@@ -38,39 +38,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $semester = $_POST['semester']; // Get the selected semester
         $selectedUnits = $_POST['units']; // Get the selected units as an array
 
-        // Include your database connection code here
-        try {
-            // Connect to the database
+        if (count($selectedUnits) !== count($unitsForSemester1) && $semester === 'Semester 1') {
+            // Display a failure message for incomplete selection
+            echo '<script>alert("Please select all units for Semester 1.");</script>';
+        } elseif (count($selectedUnits) !== count($unitsForSemester2) && $semester === 'Semester 2') {
+            // Display a failure message for incomplete selection
+            echo '<script>alert("Please select all units for Semester 2.");</script>';
+        } else {
             // Include your database connection code here
-            
-            // Prepare and execute the SQL query to insert data into the database
-            $stmt = $conn->prepare("INSERT INTO student_courses (student_id, semester, units) VALUES (:student_id, :semester, :units)");
+            try {
+                $stmt = $conn->prepare("INSERT INTO student_courses (student_id, semester, units) VALUES (:student_id, :semester, :units)");
 
-            foreach ($selectedUnits as $unitCode) {
-                // Bind parameters
-                $stmt->bindParam(':student_id', $studentId, PDO::PARAM_STR);
-                $stmt->bindParam(':semester', $semester, PDO::PARAM_STR);
-                $stmt->bindParam(':units', $unitCode, PDO::PARAM_STR);
+                foreach ($selectedUnits as $unitCode) {
+                    // Bind parameters
+                    $stmt->bindParam(':student_id', $studentId, PDO::PARAM_STR);
+                    $stmt->bindParam(':semester', $semester, PDO::PARAM_STR);
+                    $stmt->bindParam(':units', $unitCode, PDO::PARAM_STR);
 
-                // Execute the query
-                $stmt->execute();
+                    // Execute the query
+                    $stmt->execute();
+                }
+
+                // Close the database connection
+                $conn = null;
+
+                // Set a session variable to indicate successful registration
+                $_SESSION['registration_success'] = true;
+
+                // Redirect to the dashboard page after successful registration
+                echo '<script>alert("Unit registration is successful!"); window.location.href = "dashboard.php";</script>';
+            } catch (PDOException $e) {
+                echo "Error: " . $e->getMessage();
             }
-
-            // Close the database connection
-            $conn = null;
-
-            // Redirect to the dashboard page after successful registration
-            header('Location: dashboard.php');
-            exit();
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
         }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -78,43 +84,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Add Bootstrap 4 CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .navbar.bg-skyblue {
+            background-color: skyblue;
+        }
+
         /* Custom CSS for table styling */
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: #f2f2f2; /* Background color */
-            font-family: Arial, sans-serif; /* Font */
+            background-color: #f2f2f2;
+            /* Background color */
+            font-family: Arial, sans-serif;
+            /* Font */
         }
 
-        th, td {
+        th,
+        td {
             padding: 8px;
             text-align: left;
-            border-bottom: 1px solid #ddd; /* Table cell borders */
+            border-bottom: 1px solid #ddd;
+            /* Table cell borders */
         }
 
         th {
-            background-color: blue; /* Header background color */
-            color: white; /* Header text color */
+            background-color: blue;
+            /* Header background color */
+            color: white;
+            /* Header text color */
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2; /* Even row background color */
+            background-color: #f2f2f2;
+            /* Even row background color */
         }
 
         tr:nth-child(odd) {
-            background-color: #ffffff; /* Odd row background color */
+            background-color: #ffffff;
+            /* Odd row background color */
         }
     </style>
 </head>
+
 <body>
-
-
     <div class="container mt-5">
-        <!-- Message at the top initially hidden -->
+        <!-- Success message popup initially hidden -->
         <div class="alert alert-success" id="successMessage" style="display: none;">
-            Registration successful
+            Registration successful. You will now be redirected to the dashboard.
         </div>
-
         <!-- Error message div for displaying validation errors -->
         <div class="alert alert-danger" id="errorMessage" style="display: none;"></div>
 
@@ -226,24 +242,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         window.addEventListener('load', updateUnits);
 
         semesterSelect.addEventListener('change', updateUnits);
-
-        form.addEventListener('submit', function (e) {
-            // Check if all units are selected
-            const requiredUnits = Array.from(document.querySelectorAll('input[name="units[]"]')).map(checkbox => checkbox.value);
-            const selectedUnits = Array.from(document.querySelectorAll('input[name="units[]"]:checked')).map(checkbox => checkbox.value);
-
-            if (!arraysEqual(requiredUnits, selectedUnits)) {
-                e.preventDefault(); // Prevent the form from submitting
-                alert('Please select all units for the selected semester.'); // Show an alert message
+        
+        // Function to show the success message
+        function showSuccessMessage() {
+            const selectedUnits = document.querySelectorAll('input[name="units[]"]:checked');
+            if (selectedUnits.length > 0) {
+                alert('Unit registration is successful!');
             }
-        });
-
-        // Function to compare two arrays for equality
-        function arraysEqual(arr1, arr2) {
-            return arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
         }
 
+         // Function to validate the form before submission
+        function validateForm() {
+            const selectedSemester = semesterSelect.value;
+            const selectedUnits = document.querySelectorAll('input[name="units[]"]:checked');
+
+            if (selectedSemester === "") {
+                alert('Please select the semester before submitting the form.');
+                return false;
+            } else if (selectedUnits.length === 0) {
+                alert('Please select all  the units before submitting the form.');
+                return false;
+            }
+        }
     </script>
 </body>
-</html>
 
+</html>
