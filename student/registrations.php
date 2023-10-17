@@ -47,20 +47,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Include your database connection code here
             try {
-                $stmt = $conn->prepare("INSERT INTO student_courses (student_id, semester, units) VALUES (:student_id, :semester, :units)");
+                $stmt = $conn->prepare("INSERT INTO student_courses (student_id, semester, units) VALUES (:student_id, :semester, :unitCode)");
+
+                // Bind parameters outside the loop
+                $stmt->bindParam(':student_id', $studentId, PDO::PARAM_STR);
+                $stmt->bindParam(':semester', $semester, PDO::PARAM_STR);
 
                 foreach ($selectedUnits as $unitCode) {
-                    // Bind parameters
-                    $stmt->bindParam(':student_id', $studentId, PDO::PARAM_STR);
-                    $stmt->bindParam(':semester', $semester, PDO::PARAM_STR);
-                    $stmt->bindParam(':units', $unitCode, PDO::PARAM_STR);
-
-                    // Execute the query
+                    // Bind the unitCode for each unit
+                    $stmt->bindParam(':unitCode', $unitCode, PDO::PARAM_STR);
                     $stmt->execute();
                 }
-
-                // Close the database connection
-                $conn = null;
 
                 // Set a session variable to indicate successful registration
                 $_SESSION['registration_success'] = true;
@@ -74,6 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -167,14 +166,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const semesterSelect = document.getElementById('semester');
         const unitSelection = document.getElementById('unitSelection');
 
-        // Function to validate the semester selection
+        // Function to validate the form before submission
         function validateForm() {
             const selectedSemester = semesterSelect.value;
+            const selectedUnits = document.querySelectorAll('input[name="units[]"]:checked');
 
             if (selectedSemester === "") {
                 alert('Please select the semester before submitting the form.');
                 return false;
+            } else if (selectedUnits.length === 0) {
+                alert('Please select all units before submitting the form.');
+                return false;
             }
+
+            return true; // Form is valid
         }
 
         // Function to update the displayed units based on the selected semester
@@ -238,32 +243,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Initially hide the table
         unitSelection.style.display = 'none';
 
+
         // Call updateUnits when the page loads
         window.addEventListener('load', updateUnits);
 
         semesterSelect.addEventListener('change', updateUnits);
-        
-        // Function to show the success message
-        function showSuccessMessage() {
-            const selectedUnits = document.querySelectorAll('input[name="units[]"]:checked');
-            if (selectedUnits.length > 0) {
-                alert('Unit registration is successful!');
-            }
-        }
-
-         // Function to validate the form before submission
-        function validateForm() {
-            const selectedSemester = semesterSelect.value;
-            const selectedUnits = document.querySelectorAll('input[name="units[]"]:checked');
-
-            if (selectedSemester === "") {
-                alert('Please select the semester before submitting the form.');
-                return false;
-            } else if (selectedUnits.length === 0) {
-                alert('Please select all  the units before submitting the form.');
-                return false;
-            }
-        }
     </script>
 </body>
 
