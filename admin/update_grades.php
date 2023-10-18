@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
+     <?php include("header.php"); ?>
     <div class="container mt-3">
         <h2>Student Results</h2>
         <table class="table">
