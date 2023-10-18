@@ -133,10 +133,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form action="login.php" method="POST">
                     <!-- Course Code Field -->
                   <!-- Course Code Field -->
+<!-- Course Code Field -->
 <div class="mb-3">
     <label for="courseCode" class="form-label">Course Code</label>
-    <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter or paste your course code" required value="<?php echo htmlspecialchars($courseCode); ?>" readonly>
+    <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter the course_code" required value="<?php echo htmlspecialchars($courseCode); ?>" readonly>
 </div>
+
 
 
                     <!-- Password Field -->
