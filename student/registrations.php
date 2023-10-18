@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Include your database connection code here
             try {
-                $stmt = $conn->prepare("INSERT INTO student_courses (student_id, semester, units, Grades) VALUES (:student_id, :semester, :unitCode, null)");
+                $stmt = $conn->prepare("INSERT INTO student_courses (student_id, semester, units, grades) VALUES (:student_id, :semester, :unitCode, null");
 
                 // Bind parameters outside the loop
                 $stmt->bindParam(':student_id', $studentId, PDO::PARAM_STR);
