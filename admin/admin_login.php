@@ -1,50 +1,29 @@
 <?php
-// Define your database credentials
-require_once("../connect.php");
-try {
-    // Create a PDO connection
-    // Set PDO to throw exceptions on errors
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Define the default credentials
+$defaultUsername = "ann";
+$defaultPassword = "ann1234";
 
-    // Define the default credentials
-    $defaultUsername = "ann";
-    $defaultPassword = "1234";
+// Initialize variables to hold error messages
+$errorMessage = "";
 
-    // Initialize variables to hold error messages
-    $errorMessage = "";
+// Check if the form has been submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the entered username and password
+    $enteredUsername = $_POST["username"];
+    $enteredPassword = $_POST["password"];
 
-    // Check if the form has been submitted
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Get the entered username and password
-        $enteredUsername = $_POST["username"];
-        $enteredPassword = $_POST["password"];
+    // Check if the entered credentials are valid
+    if ($enteredUsername === $defaultUsername && $enteredPassword === $defaultPassword) {
+        // Redirect to the admin dashboard (admin_dashboard.php)
+        header("Location: admin_dashboard.php");
+        exit(); // Ensure that the script stops here and does not continue executing
 
-        // Check if the entered credentials are valid
-        if ($enteredUsername === $defaultUsername && $enteredPassword === $defaultPassword) {
-            // Hash the default password before inserting it into the database
-            $hashedPassword = password_hash($defaultPassword, PASSWORD_DEFAULT);
-
-            // Insert default credentials into the database
-           $stmt = $conn->prepare("INSERT INTO admin(username, password) VALUES (:username, :password)");
-            $stmt->execute([':username' => $defaultUsername, ':password' => $hashedPassword]);
-
-
-            // Redirect to the admin dashboard (admin_dashboard.php)
-            header("Location: admin_dashboard.php");
-            exit(); // Ensure that the script stops here and does not continue executing
-
-            // You can add further authentication and session management here if needed
-        } else {
-            $errorMessage = "Invalid username or password.";
-        }
+        // You can add further authentication and session management here if needed
+    } else {
+        $errorMessage = "Invalid username or password.";
     }
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
 }
 ?>
-
-<!-- The rest of your HTML code remains the same -->
-
 
 <!DOCTYPE html>
 <html>
