@@ -89,19 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </thead>
             <tbody>
                 <?php
-                // Define a function to get the unit name based on unit code
-                function getUnitName($unitCode, $semester)
-                {
-                    global $unitsForSemester1, $unitsForSemester2;
-                    if ($semester === 'Semester 1' && array_key_exists($unitCode, $unitsForSemester1)) {
-                        return $unitsForSemester1[$unitCode];
-                    } elseif ($semester === 'Semester 2' && array_key_exists($unitCode, $unitsForSemester2)) {
-                        return $unitsForSemester2[$unitCode];
-                    } else {
-                        return 'Unknown Unit';
-                    }
-                }
-
                 // Fetch student data from the database using PDO
                 $sql = "SELECT student_id, units, semester, grades FROM student_courses";
                 $stmt = $conn->prepare($sql);
@@ -114,6 +101,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $unitCode = $row['units'];
                         $semester = $row['semester'];
                         $grades = $row['grades'];
+
+                        // Define a function to get the unit name based on unit code
+                        function getUnitName($unitCode, $semester)
+                        {
+                            global $unitsForSemester1, $unitsForSemester2;
+                            if ($semester === 'Semester 1' && array_key_exists($unitCode, $unitsForSemester1)) {
+                                return $unitsForSemester1[$unitCode];
+                            } elseif ($semester === 'Semester 2' && array_key_exists($unitCode, $unitsForSemester2)) {
+                                return $unitsForSemester2[$unitCode];
+                            } else {
+                                return 'Unknown Unit';
+                            }
+                        }
                         $unitName = getUnitName($unitCode, $semester);
                 ?>
 
@@ -122,6 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?= $unitCode ?></td>
                             <td><?= $unitName ?></td>
                             <td><?= $semester ?></td>
+                            <td>
+                                <?= $grades ?>
+                            </td>
                             <td>
                                 <form method="POST" action="update_grades.php">
                                     <input type="hidden" name="student_id" value="<?= $studentId ?>">
