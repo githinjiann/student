@@ -71,6 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+<!-- Rest of your HTML and JavaScript -->
+
 
 
 <!DOCTYPE html>
