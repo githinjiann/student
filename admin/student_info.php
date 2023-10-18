@@ -18,15 +18,21 @@ if (isset($_GET['student_id']) && isset($_GET['semester']) && isset($_GET['confi
         if ($deleteStmt->execute()) {
             // Student deleted successfully
             echo "Student with ID $student_id in semester $semester has been deleted.";
+            
+            // Use JavaScript to redirect after displaying the message
+            echo '<script>
+                setTimeout(function () {
+                    window.location.href = "student_info.php";
+                }, 3000); // Redirect after 3 seconds
+            </script>';
         } else {
             // Error occurred during deletion
             echo "Error deleting the student.";
         }
+        
+        // Exit to prevent further execution
+        exit;
     }
-    
-    // Redirect back to student_info.php after deletion or if confirmation is "no"
-    header("Location: student_info.php");
-    exit; // Stop further execution
 }
 
 // Query to retrieve student registration information from the student_courses table
@@ -38,6 +44,69 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Count the number of registered students
 $studentCount = count($result);
 ?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Information</title>
+    <!-- Add Bootstrap CSS links here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar.bg-skyblue {
+            background-color: skyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <?php include("header.php"); ?>
+    <div class="container mt-3 text-center">
+        <h2>Student Details</h2>
+        <p>Total Registered Students: <?php echo $studentCount; ?></p>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Semester</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (empty($result)) {
+                            // Handle no records found
+                            echo "<tr><td colspan='3'>No records found</td></tr>";
+                        } else {
+                            foreach ($result as $row) {
+                                echo "<tr>";
+                                echo "<td>" . $row["student_id"] . "</td>";
+                                echo "<td>" . $row["semester"] . "</td>";
+                                echo "<td>
+                                    <!-- Add a link to trigger student deletion with a confirmation dialog -->
+                                    <a href='?student_id=" . $row["student_id"] . "&semester=" . $row["semester"] . 
+                                    '&confirm=yes' . "' onclick='return confirm(\"Are you sure you want to delete this student?\")'>Delete</a>
+                                </td>";
+                                echo "</tr>";
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JavaScript links here -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
 
 <!DOCTYPE html>
 <html>
