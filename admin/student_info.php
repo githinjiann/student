@@ -2,17 +2,41 @@
 // Connect to your database using PDO
 require_once("../connect.php");
 
+// Check if the "student_id" and "semester" parameters are present in the URL
+if (isset($_GET['student_id']) && isset($_GET['semester']) && isset($_GET['confirm'])) {
+    // Get the student_id and semester from the URL
+    $student_id = $_GET['student_id'];
+    $semester = $_GET['semester'];
+
+    if ($_GET['confirm'] === "yes") {
+        // Query to delete the student
+        $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id AND semester = :semester";
+        $deleteStmt = $conn->prepare($deleteSql);
+        $deleteStmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
+        $deleteStmt->bindParam(':semester', $semester, PDO::PARAM_STR);
+
+        if ($deleteStmt->execute()) {
+            // Student deleted successfully
+            echo "Student with ID $student_id in semester $semester has been deleted.";
+        } else {
+            // Error occurred during deletion
+            echo "Error deleting the student.";
+        }
+    }
+    
+    // Redirect back to student_info.php after deletion or if confirmation is "no"
+    header("Location: student_info.php");
+    exit; // Stop further execution
+}
+
 // Query to retrieve student registration information from the student_courses table
-$sql = "SELECT student_id, units, semester, grades FROM student_courses";
+$sql = "SELECT DISTINCT student_id, semester FROM student_courses";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Count the number of registered students
-$countSql = "SELECT COUNT(DISTINCT student_id) AS student_count FROM student_courses";
-$countStmt = $conn->prepare($countSql);
-$countStmt->execute();
-$studentCount = $countStmt->fetch(PDO::FETCH_ASSOC)['student_count'];
+$studentCount = count($result);
 ?>
 
 <!DOCTYPE html>
@@ -22,65 +46,53 @@ $studentCount = $countStmt->fetch(PDO::FETCH_ASSOC)['student_count'];
     <title>Student Information</title>
     <!-- Add Bootstrap CSS links here -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-     <style>
+    <style>
         .navbar.bg-skyblue {
             background-color: skyblue;
         }
-        </style>
+    </style>
 </head>
 
 <body>
-     <?php include("header.php"); ?>
-    <div class="container mt-3">
-        <h2>Student Information</h2>
+    <?php include("header.php"); ?>
+    <div class="container mt-3 text-center">
+        <h2>Student Details</h2>
         <p>Total Registered Students: <?php echo $studentCount; ?></p>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>Unit Code</th>
-                    <th>Unit Name</th>
-                    <th>Grades</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if (empty($result)) {
-                    // Handle no records found
-                    echo "<tr><td colspan='5'>No records found</td></tr>";
-                } else {
-                    foreach ($result as $row) {
-                        echo "<tr>";
-                        echo "<td>" . $row["student_id"] . "</td>";
-                        echo "<td>" . $row["units"] . "</td>";
-                        echo "<td>" . $row["semester"] . "</td>";
-                        echo "<td>";
-                ?>
-                        <form method="POST" action="update_grades.php">
-                            <input type="hidden" name="student_id" value="<?php echo $row["student_id"]; ?>">
-                            <input type="hidden" name="semester" value="<?php echo $row["semester"]; ?>">
-                            <input type="hidden" name="unit_code" value="<?php echo $row["units"]; ?>">
-                            <input type="text" name="grades" value="<?php echo isset($row["grades"]) ? $row["grades"] : ''; ?>">
-
-                        </form>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Semester</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <?php
-                        echo "</td>";
+                        if (empty($result)) {
+                            // Handle no records found
+                            echo "<tr><td colspan='3'>No records found</td></tr>";
+                        } else {
+                            foreach ($result as $row) {
+                                echo "<tr>";
+                                echo "<td>" . $row["student_id"] . "</td>";
+                                echo "<td>" . $row["semester"] . "</td>";
+                                echo "<td>
+                                    <!-- Add a link to trigger student deletion with a confirmation dialog -->
+                                    <a href='?student_id=" . $row["student_id"] . "&semester=" . $row["semester"] . 
+                                    '&confirm=yes' . "' onclick='return confirm(\"Are you sure you want to delete this student?\")'>Delete</a>
+                                </td>";
+                                echo "</tr>";
+                            }
+                        }
                         ?>
-                        <td>
-                            <form method="POST" action="delete_student.php">
-                                <input type="hidden" name="student_id" value="<?php echo $row["student_id"]; ?>">
-                                <input type="hidden" name="unit_code" value="<?php echo $row["units"]; ?>">
-                                <button type="submit">Delete Student</button>
-                            </form>
-                        </td>
-                <?php
-                        echo "</tr>";
-                    }
-                }
-                ?>
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- Add Bootstrap JavaScript links here -->

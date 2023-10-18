@@ -108,7 +108,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
             try {
                 // Define units for Semester 1 and Semester 2 (same as in registrations.php)
                 $unitsForSemester1 = [
-                    'SIT 215' => 'Computer',
+                    'SIT 215' => 'Computer Graphics',
                     'SIT 212' => 'Cloud Computing',
                     'SIT 213' => 'Mobile Computing',
                     'SIT 214' => 'Database Management',

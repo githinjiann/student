@@ -16,7 +16,7 @@
                         <a class="nav-link" href="admin/admin_login.php">Admin</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="register.php">Apply</a>
+                        <a class="nav-link" href="register.php">appy now </a>
                     </li>
 
                 </ul>

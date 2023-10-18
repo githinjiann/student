@@ -4,7 +4,7 @@ require_once("../connect.php");
 session_start();
 
 $unitsForSemester1 = [
-    'SIT 215' => 'Computer',
+    'SIT 215' => 'Computer Graphics',
     'SIT 212' => 'Cloud Computing',
     'SIT 213' => 'Mobile Computing',
     'SIT 214' => 'Database Management',
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['updated_grades'] = $newGrades;
 
             // Redirect back to the student information page
-            header("Location: student_info.php");
+            header("Location: update_grades.php");
             exit;
         } else {
             // Handle the case where the update fails
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 
 <head>
-    <title>Student Information</title>
+    <title>Student Results</title>
     <!-- Add Bootstrap CSS links here -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
      <style>
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
      <?php include("header.php"); ?>
     <div class="container mt-3">
-        <h2>Student Information</h2>
+        <h2>Student Results</h2>
         <table class="table">
             <thead>
                 <tr>

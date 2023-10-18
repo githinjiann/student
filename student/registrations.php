@@ -16,7 +16,7 @@ $studentId = $_SESSION['course_code'];
 
 // Define units for Semester 1
 $unitsForSemester1 = [
-    'SIT 215' => 'Computer',
+    'SIT 215' => 'Computer Graphics',
     'SIT 212' => 'Cloud Computing',
     'SIT 213' => 'Mobile Computing',
     'SIT 214' => 'Database Management',
