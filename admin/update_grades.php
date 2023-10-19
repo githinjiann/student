@@ -21,6 +21,19 @@ $unitsForSemester2 = [
     'SIT 223' => 'Software Quality Assurance',
 ];
 
+// Define the getUnitName function outside the loop
+function getUnitName($unitCode, $semester)
+{
+    global $unitsForSemester1, $unitsForSemester2;
+    if ($semester === 'Semester 1' && array_key_exists($unitCode, $unitsForSemester1)) {
+        return $unitsForSemester1[$unitCode];
+    } elseif ($semester === 'Semester 2' && array_key_exists($unitCode, $unitsForSemester2)) {
+        return $unitsForSemester2[$unitCode];
+    } else {
+        return 'Unknown Unit';
+    }
+}
+
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the data from the submitted form
@@ -56,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Error: " . $e->getMessage();
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -93,55 +105,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Fetch student data from the database using PDO
                 $sql = "SELECT student_id, units, semester, grades FROM student_courses";
                 $stmt = $conn->prepare($sql);
-                $stmt->execute();
-                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if ($stmt->execute()) {
+                    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                if ($result) {
-                    foreach ($result as $row) {
-                        $studentId = $row['student_id'];
-                        $unitCode = $row['units'];
-                        $semester = $row['semester'];
-                        $grades = $row['grades'];
+                    if ($result) {
+                        foreach ($result as $row) {
+                            $studentId = $row['student_id'];
+                            $unitCode = $row['units'];
+                            $semester = $row['semester'];
+                            $grades = $row['grades'];
+                            $unitName = getUnitName($unitCode, $semester);
+                            ?>
 
-                        // Define a function to get the unit name based on unit code
-                        function getUnitName($unitCode, $semester)
-                        {
-                            global $unitsForSemester1, $unitsForSemester2;
-                            $units = ($semester === 'Semester 1') ? $unitsForSemester1 : $unitsForSemester2;
-                            return isset($units[$unitCode]) ? $units[$unitCode] : 'Unknown Unit';
+                            <tr>
+                                <td><?= $studentId ?></td>
+                                <td><?= $unitCode ?></td>
+                                <td><?= $unitName ?></td>
+                                <td><?= $semester ?></td>
+                                <td>
+                                    <?= $grades ?>
+                                </td>
+                                <td>
+                                    <form method="POST" action="update_grades.php">
+                                        <input type="hidden" name="student_id" value="<?= $studentId ?>">
+                                        <input type="hidden" name="unit_code" value="<?= $unitCode ?>">
+                                        <input type="hidden" name="semester" value="<?= $semester ?>">
+                                        <select name="grades">
+                                            <option value="A" <?= ($grades === "A") ? "selected" : "" ?>>A</option>
+                                            <option value="B" <?= ($grades === "B") ? "selected" : "" ?>>B</option>
+                                            <option value="C" <?= ($grades === "C") ? "selected" : "" ?>>C</option>
+                                            <option value="D" <?= ($grades === "D") ? "selected" : "" ?>>D</option>
+                                            <option value="E" <?= ($grades === "E") ? "selected" : "" ?>>E</option>
+                                        </select>
+                                        <button type="submit">Update</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php
                         }
-                        $unitName = getUnitName($unitCode, $semester);
-                ?>
-
-                        <tr>
-                            <td><?= $studentId ?></td>
-                            <td><?= $unitCode ?></td>
-                            <td><?= $unitName ?></td>
-                            <td><?= $semester ?></td>
-                            <td>
-                                <?= $grades ?>
-                            </td>
-                            <td>
-                                <form method="POST" action="update_grades.php">
-                                    <input type="hidden" name="student_id" value="<?= $studentId ?>">
-                                    <input type="hidden" name="unit_code" value="<?= $unitCode ?>">
-                                    <input type="hidden" name="semester" value="<?= $semester ?>">
-                                    <select name="grades">
-                                        <option value="A" <?= ($grades === "A") ? "selected" : "" ?>>A</option>
-                                        <option value="B" <?= ($grades === "B") ? "selected" : "" ?>>B</option>
-                                        <option value="C" <?= ($grades === "C") ? "selected" : "" ?>>C</option>
-                                        <option value="D" <?= ($grades === "D") ? "selected" : "" ?>>D</option>
-                                        <option value="E" <?= ($grades === "E") ? "selected" : "" ?>>E</option>
-                                    </select>
-                                    <button type="submit">Update</button>
-                                </form>
-                            </td>
-                        </tr>
-
-                <?php
+                    } else {
+                        echo "<tr><td colspan='6'>No records found</td></tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>No records found</td></tr>";
+                    // Handle the query execution error
+                    echo "Error executing the query.";
                 }
                 ?>
             </tbody>
