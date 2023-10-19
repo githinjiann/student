@@ -15,20 +15,19 @@ if (isset($_GET['student_id']) && isset($_GET['semester']) && isset($_GET['confi
         $deleteStmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
         $deleteStmt->bindParam(':semester', $semester, PDO::PARAM_STR);
 
-        if ($deleteStmt->execute()) {
-            // Student deleted successfully
-            echo "Student with ID $student_id in semester $semester has been deleted.";
-            
-            // Use JavaScript to redirect after displaying the message
-            echo '<script>
-                setTimeout(function () {
-                    window.location.href = "student_info.php";
-                }, 3000); // Redirect after 3 seconds
-            </script>';
-        } else {
-            // Error occurred during deletion
-            echo "Error deleting the student.";
-        }
+       if ($deleteStmt->execute()) {
+    // Student deleted successfully
+    echo "Student with ID $student_id in semester $semester has been deleted.";
+    
+    // Use JavaScript to redirect immediately after displaying the message
+    echo '<script>
+        window.location.href = "student_info.php";
+    </script>';
+} else {
+    // Error occurred during deletion
+    echo "Error deleting the student.";
+}
+
         
         // Exit to prevent further execution
         exit;
