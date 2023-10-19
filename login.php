@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- Course Code Field -->
 <div class="mb-3">
     <label for="courseCode" class="form-label">Course Code</label>
-    <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter the course_code" required value=>"
+    <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter the course_code" required value=>
 </div>
 
 
