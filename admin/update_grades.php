@@ -1,6 +1,6 @@
 <?php
 // Start the session
-session_start();
+
 
 // Include your database connection
 require_once("../connect.php");
@@ -108,27 +108,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmt->execute()) {
                     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                if ($result) {
-                    foreach ($result as $row) {
-                        $studentId = $row['student_id'];
-                        $unitCode = $row['units'];
-                        $semester = $row['semester'];
-                        $grades = $row['grades'];
-
-                        // Define a function to get the unit name based on unit code
-                        function getUnitName($unitCode, $semester)
-                        {
-                            global $unitsForSemester1, $unitsForSemester2;
-                            if ($semester === 'Semester 1' && array_key_exists($unitCode, $unitsForSemester1)) {
-                                return $unitsForSemester1[$unitCode];
-                            } elseif ($semester === 'Semester 2' && array_key_exists($unitCode, $unitsForSemester2)) {
-                                return $unitsForSemester2[$unitCode];
-                            } else {
-                                return 'Unknown Unit';
-                            }
-                        }
-                        $unitName = getUnitName($unitCode, $semester);
-                ?>
+                    if ($result) {
+                        foreach ($result as $row) {
+                            $studentId = $row['student_id'];
+                            $unitCode = $row['units'];
+                            $semester = $row['semester'];
+                            $grades = $row['grades'];
+                            $unitName = getUnitName($unitCode, $semester);
+                            ?>
 
                             <tr>
                                 <td><?= $studentId ?></td>
