@@ -20,7 +20,7 @@ if (isset($_GET['student_id']) && isset($_GET['semester']) && isset($_GET['confi
     echo "Student with ID $student_id in semester $semester has been deleted.";
     
     // Use JavaScript to redirect immediately after displaying the message
-    echo '<script>a
+    echo '<script>
         window.location.href = "student_info.php";
     </script>';
 } else {
