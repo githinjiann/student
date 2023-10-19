@@ -107,13 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         function getUnitName($unitCode, $semester)
                         {
                             global $unitsForSemester1, $unitsForSemester2;
-                            if ($semester === 'Semester 1' && array_key_exists($unitCode, $unitsForSemester1)) {
-                                return $unitsForSemester1[$unitCode];
-                            } elseif ($semester === 'Semester 2' && array_key_exists($unitCode, $unitsForSemester2)) {
-                                return $unitsForSemester2[$unitCode];
-                            } else {
-                                return 'Unknown Unit';
-                            }
+                            $units = ($semester === 'Semester 1') ? $unitsForSemester1 : $unitsForSemester2;
+                            return isset($units[$unitCode]) ? $units[$unitCode] : 'Unknown Unit';
                         }
                         $unitName = getUnitName($unitCode, $semester);
                 ?>
@@ -158,4 +153,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </body>
 
 </html>
-
