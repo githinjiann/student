@@ -9,45 +9,28 @@ if (isset($_GET['student_id']) && isset($_GET['semester']) && isset($_GET['confi
     $semester = $_GET['semester'];
 
     if ($_GET['confirm'] === "yes") {
-        try {
-            $conn->beginTransaction(); // Start a database transaction
-            
-            // Delete the student from the "student_courses" table
-            $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id AND semester = :semester";
-            $deleteStmt = $conn->prepare($deleteSql);
-            $deleteStmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
-            $deleteStmt->bindParam(':semester', $semester, PDO::PARAM_STR);
-            
-            if ($deleteStmt->execute()) {
-                // Student deleted successfully from the "student_courses" table
-                
-                // Now, delete the student's details from the "update_grades" table
-                $deleteSqlUpdateGrades = "DELETE FROM update_grades WHERE student_id = :student_id AND semester = :semester";
-                $deleteStmtUpdateGrades = $conn->prepare($deleteSqlUpdateGrades);
-                $deleteStmtUpdateGrades->bindParam(':student_id', $student_id, PDO::PARAM_INT);
-                $deleteStmtUpdateGrades->bindParam(':semester', $semester, PDO::PARAM_STR);
-                
-                if ($deleteStmtUpdateGrades->execute()) {
-                    // Student details deleted successfully from the "update_grades" table
-                    
-                    // Commit the transaction if both deletions were successful
-                    $conn->commit();
-                    
-                    // Redirect back to the student information page
-                    header("Location: student_info.php");
-                    exit;
-                } else {
-                    // Handle the case where the deletion from "update_grades" fails
-                    echo "Error deleting the student details from the 'update_grades' table.";
-                }
-            } else {
-                // Handle the case where the deletion from "student_courses" fails
-                echo "Error deleting the student from the 'student_courses' table.";
-            }
-        } catch (PDOException $e) {
-            $conn->rollBack(); // Roll back the transaction if an error occurs
-            echo "Error: " . $e->getMessage();
-        }
+        // Query to delete the student
+        $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id AND semester = :semester";
+        $deleteStmt = $conn->prepare($deleteSql);
+        $deleteStmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
+        $deleteStmt->bindParam(':semester', $semester, PDO::PARAM_STR);
+
+       if ($deleteStmt->execute()) {
+    // Student deleted successfully
+    echo "Student with ID $student_id in semester $semester has been deleted.";
+    
+    // Use JavaScript to redirect immediately after displaying the message
+    echo '<script>a
+        window.location.href = "student_info.php";
+    </script>';
+} else {
+    // Error occurred during deletion
+    echo "Error deleting the student.";
+}
+
+        
+        // Exit to prevent further execution
+        exit;
     }
 }
 
