@@ -2,7 +2,8 @@
 // Include the database connection file
 require_once('connect.php');
 
-session_start(); // Start the session
+// Start the session
+session_start();
 
 $registrationMessage = ''; // Initialize an empty registration message
 
@@ -24,6 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'course' => $course,
         'courseCode' => $courseCode,
     ];
+
+    // Set the courseCode session variable
+    $_SESSION['courseCode'] = $courseCode;
+
     // SQL query to insert user data into the database
     $sql = "INSERT INTO users (full_name, email, course, course_code, password) VALUES (:fullName, :email, :course, :courseCode, :hashedPassword)";
 
@@ -56,6 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Close the database connection (optional if not needed elsewhere)
 $conn = null;
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 

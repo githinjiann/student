@@ -5,10 +5,17 @@ require_once('connect.php');
 // Start a session to manage user login state
 session_start();
 
-// Initialize variables
 $courseCode = "";
 $password = "";
 $errorMessage = ""; // Initialize error message
+
+// Check if the courseCode session variable is set
+if (isset($_SESSION['courseCode'])) {
+    $courseCode = $_SESSION['courseCode'];
+} else {
+    $courseCode = ''; // Default value if the session variable is not set
+}
+
 
 // Check if the login form has been submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['loggedin'] = true;
 
             // Store the course code (student ID) in a session variable
-            $_SESSION['course_code'] = $result['course_code']; // Use the actual column name from your database
+            $_SESSION['courseCode'] = $result['course_code']; // Use the actual column name from your database
 
             // Redirect to the dashboard or another page upon successful login
             header('Location: student/dashboard.php');
@@ -57,7 +64,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errorMessage = "Database error: " . $e->getMessage();
     }
 }
+
+// Check if the courseCode session variable is set
+if (isset($_SESSION['courseCode'])) {
+    $courseCode = $_SESSION['courseCode'];
+} else {
+    $courseCode = ''; // Default value if the session variable is not set
+}
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -136,9 +153,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- Course Code Field -->
 <div class="mb-3">
     <label for="courseCode" class="form-label">Course Code</label>
-    <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter the course_code" required value=>
+    <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter the course_code" required value="<?php echo $courseCode; ?>">
 </div>
-
 
 
                     <!-- Password Field -->
