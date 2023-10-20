@@ -24,6 +24,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,29 +38,19 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
             margin-top: 20px;
         }
 
-        .narrow-column {
-            width: 10%;
-        }
-
-        .center-table {
-            margin: 0 auto;
-            width: 60%;
-        }
-
-        /* Custom CSS for the form elements */
-        .custom-form {
-            max-width: 70%; /* Adjust the max-width as needed */
-            margin: 0 auto;
-            padding: 5px;
+        /* Add this CSS to remove the gap between the modal and the top of the page */
+        #notification-modal {
+            margin: 0;
+            top: 0;
         }
     </style>
 </head>
 <body>
 
-    <h2 class="text-center text-primary mt-3">Student Results</h2>
+    <h2 class="text-center text-primary mt-3">Results</h2>
 
     <!-- Form to select a semester -->
-    <form method="POST" action="results.php" class="custom-form">
+    <form method="POST" action="results.php" class="container mt-4">
         <div class="form-group">
             <label for="semester">Select Semester:</label>
             <select class="form-control" id="semester" name="semester">
@@ -68,8 +59,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
                 <option value="Semester 2" <?php if ($selectedSemester === 'Semester 2') echo 'selected'; ?>>Semester 2</option>
             </select>
         </div>
-        <!-- Center-align the "View Results" button -->
-        <div class="text-center mt-3">
+        <div class="text-center">
             <button type="submit" class="btn btn-primary">View Results</button>
         </div>
     </form>
@@ -78,67 +68,72 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
     <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($selectedSemester)) {
         try {
-    ?>
-            <div class="row mt-4">
-                <div class="col-12">
-                    <table class="table table-bordered center-table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th class="narrow-column text-center">Unit Code</th>
-                                <th class="narrow-column text-center">Unit Name</th>
-                                <th class="narrow-column text-center">Grade</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $unitsForSemester1 = [
-                                'SIT 215' => 'Computer Graphics',
-                                'SIT 212' => 'Cloud Computing',
-                                'SIT 213' => 'Mobile Computing',
-                                'SIT 214' => 'Database Management',
-                            ];
+            // Define units for Semester 1 and Semester 2 (same as in registrations.php)
+            $unitsForSemester1 = [
+                'SIT 215' => 'Computer',
+                'SIT 212' => 'Cloud Computing',
+                'SIT 213' => 'Mobile Computing',
+                'SIT 214' => 'Database Management',
+            ];
 
-                            $unitsForSemester2 = [
-                                'SIT 220' => 'Group Project',
-                                'SIT 221' => 'IoT',
-                                'SIT 222' => 'Computer Project',
-                                'SIT 223' => 'Software Quality Assurance',
-                            ];
+            $unitsForSemester2 = [
+                'SIT 220' => 'Group Project',
+                'SIT 221' => 'IoT',
+                'SIT 222' => 'Computer Project',
+                'SIT 223' => 'Software Quality Assurance',
+            ];
 
-                            $selectedSemester = $_POST['semester'];
-                            $units = ($selectedSemester === 'Semester 1') ? $unitsForSemester1 : $unitsForSemester2;
+            $units = $selectedSemester === 'Semester 1' ? $unitsForSemester1 : $unitsForSemester2;
+            ?>
 
-                            foreach ($units as $unitCode => $unitName) {
-                                echo '<tr>';
-                                echo '<td class="narrow-column">' . $unitCode . '</td>';
-                                echo '<td class="narrow-column">' . $unitName . '</td>';
-                                // Fetch and display the grades from the database based on the selected semester
-                                $gradesQuery = "SELECT grades FROM student_courses WHERE student_id = :student_id AND semester = :semester AND units = :unit";
-                                $stmtGrades = $conn->prepare($gradesQuery);
-                                $stmtGrades->bindParam(':student_id', $studentId, PDO::PARAM_STR);
-                                $stmtGrades->bindParam(':semester', $selectedSemester, PDO::PARAM_STR);
-                                $stmtGrades->bindParam(':unit', $unitCode, PDO::PARAM_STR);
-                                $stmtGrades->execute();
-                                $gradeData = $stmtGrades->fetch(PDO::FETCH_ASSOC);
-                                $grade = $gradeData ? $gradeData['grades'] : '';
+            <div class="container mt-4">
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Unit Code</th>
+                            <th>Unit Name</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($units as $unitCode => $unitName) {
+                            echo '<tr>';
+                            echo '<td>' . $unitCode . '</td>';
+                            echo '<td>' . $unitName . '</td>';
 
-                                echo '<td class="narrow-column text-center">' . $grade . '</td>';
-                                echo '</tr>';
+                            // Fetch and display the grades from the database based on the selected semester
+                            $gradesQuery = "SELECT grades FROM student_courses WHERE student_id = :student_id AND semester = :semester AND units = :unit";
+                            $stmtGrades = $conn->prepare($gradesQuery);
+                            $stmtGrades->bindParam(':student_id', $studentId, PDO::PARAM_STR);
+                            $stmtGrades->bindParam(':semester', $selectedSemester, PDO::PARAM_STR);
+                            $stmtGrades->bindParam(':unit', $unitCode, PDO::PARAM_STR);
+                            $stmtGrades->execute();
+                            $gradeData = $stmtGrades->fetch(PDO::FETCH_ASSOC);
+                            $grade = $gradeData ? $gradeData['grades'] : '';
+
+                            // Check if the grade is empty, and display a message if it is
+                            if (empty($grade)) {
+                                echo '<td><strong>Grades not available</strong></td>';
+                            } else {
+                                echo '<td>' . $grade . '</td>';
                             }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
+
+                            echo '</tr>';
+                        }
+                        ?>
+                    </tbody>
+                </table>
             </div>
-    <?php
+            <?php
         } catch (PDOException $e) {
             // Handle database query execution errors here
             echo "Database Query Error: " . $e->getMessage();
         }
     }
     ?>
-</div>
-<!-- Add Bootstrap 4 JavaScript links here -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Add Bootstrap 4 JavaScript links here -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
