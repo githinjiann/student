@@ -26,7 +26,6 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,21 +52,16 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
             margin: 0 auto;
             padding: 5px;
         }
-
-        .alert-success, .alert-warning {
-            margin: 0 auto;
-            max-width: 400px; /* Minimize the width of the success and warning messages */
-        }
     </style>
 </head>
-
 <body>
+
     <h2 class="text-center text-primary mt-3">Student Results</h2>
 
     <!-- Form to select a semester -->
     <form method="POST" action="results.php" class="custom-form">
         <div class="form-group">
-            <label for "semester">Select Semester:</label>
+            <label for="semester">Select Semester:</label>
             <select class="form-control" id="semester" name="semester">
                 <option value="">Select the semester</option> <!-- Default option -->
                 <option value="Semester 1" <?php if ($selectedSemester === 'Semester 1') echo 'selected'; ?>>Semester 1</option>
@@ -114,12 +108,10 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
                             $selectedSemester = $_POST['semester'];
                             $units = ($selectedSemester === 'Semester 1') ? $unitsForSemester1 : $unitsForSemester2;
 
-                            $gradesUpdated = false;
                             foreach ($units as $unitCode => $unitName) {
-                                // Initialize variables
-                                $gradeData = null;
-                                $grade = '';
-
+                                echo '<tr>';
+                                echo '<td class="narrow-column">' . $unitCode . '</td>';
+                                echo '<td class="narrow-column">' . $unitName . '</td>';
                                 // Fetch and display the grades from the database based on the selected semester
                                 $gradesQuery = "SELECT grades FROM student_courses WHERE student_id = :student_id AND semester = :semester AND units = :unit";
                                 $stmtGrades = $conn->prepare($gradesQuery);
@@ -128,14 +120,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
                                 $stmtGrades->bindParam(':unit', $unitCode, PDO::PARAM_STR);
                                 $stmtGrades->execute();
                                 $gradeData = $stmtGrades->fetch(PDO::FETCH_ASSOC);
-                                if ($gradeData) {
-                                    $grade = $gradeData['grades'];
-                                    $gradesUpdated = true;
-                                }
+                                $grade = $gradeData ? $gradeData['grades'] : '';
 
-                                echo '<tr>';
-                                echo '<td class="narrow-column">' . $unitCode . '</td>';
-                                echo '<td class="narrow-column">' . $unitName . '</td>';
                                 echo '<td class="narrow-column text-center">' . $grade . '</td>';
                                 echo '</tr>';
                             }
@@ -144,22 +130,15 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
                     </table>
                 </div>
             </div>
-
-            <?php
-         if ($gradesUpdated) {
-    echo '<div class="alert alert-success text-center mt-4">Grades have been updated!</div>';
-} else {
-    echo '<div class="alert alert-warning text-center mt-4">Grades have not been updated yet.</div>';
-}
-
-            ?>
-
-        <?php
+    <?php
         } catch (PDOException $e) {
             // Handle database query execution errors here
             echo "Database Query Error: " . $e->getMessage();
         }
     }
     ?>
+</div>
+<!-- Add Bootstrap 4 JavaScript links here -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
