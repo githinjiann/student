@@ -39,11 +39,19 @@
             bottom: 0;
             width: 100%;
         }
+
+       .logo-img {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
     </style>
 </head>
-
 <body>
-    <?php include("header.php"); ?>
+   <div class="col-md-12 text-center"> <!-- Apply the "text-center" class to center the content -->
+    <img src="image/logo.jpg" alt="Your Logo" class="img-fluid logo-img">
+</div>
 
     <div class="container mt-4">
         <div class="row justify-content-center">
@@ -73,5 +81,4 @@
         </div>
     </footer>
 </body>
-
 </html>

@@ -72,12 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!-- Rest of your HTML and JavaScript -->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,48 +81,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Add Bootstrap 4 CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .container {
+            margin: 0 auto; /* Center the container horizontally */
+        }
+
         .navbar.bg-skyblue {
             background-color: skyblue;
         }
 
-        /* Custom CSS for table styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .form-card {
             background-color: #f2f2f2;
-            /* Background color */
-            font-family: Arial, sans-serif;
-            /* Font */
+            padding: 20px;
+            border-radius: 10px;
         }
 
-        th,
-        td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            /* Table cell borders */
+        /* Custom CSS for the table */
+        .custom-table {
+            margin: 0 auto;
+            max-width: 100%; /* Adjust the max-width as needed */
         }
 
-        th {
-            background-color: blue;
-            /* Header background color */
-            color: white;
-            /* Header text color */
+        .custom-table th {
+            text-align: center; /* Center align the table headers */
         }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-            /* Even row background color */
+        .custom-table td {
+            text-align: center; /* Center align the table cells */
         }
 
-        tr:nth-child(odd) {
-            background-color: #ffffff;
-            /* Odd row background color */
+        /* Custom CSS for the form elements */
+        .custom-form {
+            max-width: 70%; /* Adjust the max-width as needed */
+            margin: 0 auto;
+            padding: 5px;
+        }
+
+        /* Custom CSS for the title */
+        .custom-title {
+            text-align: center;
+            font-weight: bold;
+            color: skyblue;
+            
         }
     </style>
 </head>
-
 <body>
+    
     <div class="container mt-5">
         <!-- Success message popup initially hidden -->
         <div class="alert alert-success" id="successMessage" style="display: none;">
@@ -134,39 +134,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <!-- Error message div for displaying validation errors -->
         <div class="alert alert-danger" id="errorMessage" style="display: none;"></div>
-
-        <h2>Unit Registration</h2>
-        <form method="POST" action="registrations.php" id="registrationForm" onsubmit="return validateForm();">
+        <h2 class="custom-title">Unit Registration</h2>
+        <form method="POST" action="registrations.php" id="registrationForm" onsubmit="return validateForm();" class="custom-form">
             <!-- Semester selection -->
             <div class="form-group">
-                <select class="form-control" id="semester" name="semester">
-                    <option value="">Select the semester please</option>
+                <label for="semester">Select Semester</label>
+                <select class="form-control" id="semester" name="semester" onchange="updateUnits">
+                    
                     <option value="Semester 1">Semester 1</option>
                     <option value="Semester 2">Semester 2</option>
                 </select>
             </div>
-
             <!-- Unit selection (display Semester-specific units) -->
-            <div class="row" id="unitSelection" style="display: none;">
-                <table>
-                    <tr>
-                        <th>Unit Code</th>
-                        <th>Unit Name</th>
-                        <th>Register</th>
-                    </tr>
-                    <!-- Units for Semester 1 and Semester 2 will be dynamically populated here -->
-                </table>
+            <div class="form-group" id="unitSelection" style="display: none;">
+                
+                <div class="table-responsive custom-table">
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>Unit Code</th>
+                                <th>Unit Name</th>
+                                <th>Register</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unitTableBody">
+                            <!-- Units for Semester 1 and Semester 2 will be dynamically populated here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary d-block mx-auto mt-3">Submit</button>
         </form>
     </div>
 
-    <!-- JavaScript to show the table when a semester is selected -->
+    
+    <!-- JavaScript to show the unit selection when a semester is chosen -->
     <script>
         const form = document.getElementById('registrationForm');
         const semesterSelect = document.getElementById('semester');
         const unitSelection = document.getElementById('unitSelection');
+        const unitTableBody = document.getElementById('unitTableBody');
 
         // Function to validate the form before submission
         function validateForm() {
@@ -187,64 +194,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Function to update the displayed units based on the selected semester
         function updateUnits() {
             const selectedSemester = semesterSelect.value;
-
-            // Determine which units to display based on the selected semester
             const unitsToDisplay = (selectedSemester === 'Semester 1') ? <?php echo json_encode($unitsForSemester1); ?> : <?php echo json_encode($unitsForSemester2); ?>;
+            
+            // Clear the table body
+            unitTableBody.innerHTML = '';
 
-            // Build the table with the selected units
-            const table = document.createElement('table');
-            table.style.width = '80%';
-            table.style.borderCollapse = 'collapse';
-            table.style.backgroundColor = '#f2f2f2';
-            table.style.fontFamily = 'Arial, sans-serif';
-
-            const headerRow = document.createElement('tr');
-            const header1 = document.createElement('th');
-            header1.textContent = 'Unit Code';
-            const header2 = document.createElement('th');
-            header2.textContent = 'Unit Name';
-            const header3 = document.createElement('th');
-            header3.textContent = 'Register';
-            headerRow.appendChild(header1);
-            headerRow.appendChild(header2);
-            headerRow.appendChild(header3);
-            table.appendChild(headerRow);
-
+            // Create and append rows for unit selection
             for (const unitCode in unitsToDisplay) {
                 const unitName = unitsToDisplay[unitCode];
                 const row = document.createElement('tr');
-                const cell1 = document.createElement('td');
-                cell1.textContent = unitCode;
-                const cell2 = document.createElement('td');
-                cell2.textContent = unitName;
-                const cell3 = document.createElement('td');
-                const checkbox = document.createElement('input');
-                checkbox.className = 'form-check-input';
-                checkbox.type = 'checkbox';
-                checkbox.name = 'units[]';
-                checkbox.value = unitCode;
-                cell3.appendChild(checkbox);
-
-                row.appendChild(cell1);
-                row.appendChild(cell2);
-                row.appendChild(cell3);
-
-                table.appendChild(row);
+                row.innerHTML = `
+                    <td>${unitCode}</td>
+                    <td>${unitName}</td>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="units[]" value="${unitCode}">
+                        </div>
+                    </td>
+                `;
+                unitTableBody.appendChild(row);
             }
 
-            // Remove the existing table (if any) and append the updated one
-            while (unitSelection.firstChild) {
-                unitSelection.removeChild(unitSelection.firstChild);
-            }
-            unitSelection.appendChild(table);
-
-            // Show the table when the semester is selected
+            // Show the unit selection when the semester is selected
             unitSelection.style.display = (selectedSemester !== "") ? 'block' : 'none';
         }
 
-        // Initially hide the table
+        // Initially hide the unit selection
         unitSelection.style.display = 'none';
-
 
         // Call updateUnits when the page loads
         window.addEventListener('load', updateUnits);
@@ -252,5 +228,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         semesterSelect.addEventListener('change', updateUnits);
     </script>
 </body>
-
 </html>

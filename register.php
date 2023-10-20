@@ -2,8 +2,7 @@
 // Include the database connection file
 require_once('connect.php');
 
-// Start the session
-session_start();
+session_start(); // Start the session
 
 $registrationMessage = ''; // Initialize an empty registration message
 
@@ -25,10 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'course' => $course,
         'courseCode' => $courseCode,
     ];
-
-    // Set the courseCode session variable
-    $_SESSION['courseCode'] = $courseCode;
-
     // SQL query to insert user data into the database
     $sql = "INSERT INTO users (full_name, email, course, course_code, password) VALUES (:fullName, :email, :course, :courseCode, :hashedPassword)";
 
@@ -61,66 +56,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Close the database connection (optional if not needed elsewhere)
 $conn = null;
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form</title>
     <!-- Include Bootstrap CSS from a CDN or your project's local files -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <style>
-        .navbar.bg-skyblue {
-            background-color: skyblue;
-        }
+ <style>
+    .navbar.bg-skyblue {
+        background-color: skyblue;
+    }
 
-        .form-title {
-            color: #333;
-            text-decoration: underline;
-            font-family: Georgia, sans-serif;
-            text-transform: capitalize;
-        }
+    /* Styling for the title */
+    .form-title {
+        text-align: center;
+        color: green;
+        font-weight: bold;
+        margin-top: 0; /* Remove the margin-top */
+    }
 
-        .custom-bg {
-            background-color: #f0f0f0;
-        }
+    .custom-bg {
+        background-color: #f0f0f0;
+    }
 
-        .registration-details {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-        }
+    .registration-details {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+    }
 
-        /* Sticky footer */
-        html, body {
-            height: 100%;
-        }
+    /* Sticky footer */
+    html, body {
+        height: 100%;
+    }
 
-        .wrapper {
-            min-height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
+    .wrapper {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
-        .container {
-            flex: 1;
-        }
+    .container {
+        flex: 1;
+    }
 
-        .footer {
-            background-color: black;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-        }
-    </style>
+    .footer {
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 20px 0;
+    }
+</style>
+
 </head>
 
+
+<nav class="navbar navbar-expand-lg navbar-light bg-skyblue">
+        <div class="container">
+            <a class="navbar-brand" href="#" style="font-weight: bold; font-family: georgia, sans-serif;">EGERTON UNIVERSITY</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">Home</a>
+                    </li>
+                    <!-- Modify the "Login" link to have an ID for easy access -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php" id="login-link"> Student Login</a>
+                   
+                   
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
 <body class="wrapper">
-    <?php include("header.php"); ?>
     <div class="container mt-5">
         <h1 class="form-title">Student Registration Form</h1>
         <div class="row justify-content-center">
@@ -207,6 +224,4 @@ $conn = null;
     </script>
 </body>
 
-</html>
-
-
+</html>     
