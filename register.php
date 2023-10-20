@@ -4,6 +4,7 @@ require_once('connect.php');
 
 session_start(); // Start the session
 
+
 $registrationMessage = ''; // Initialize an empty registration message
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

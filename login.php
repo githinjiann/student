@@ -10,7 +10,6 @@ $courseCode = "";
 $password = "";
 $errorMessage = ""; // Initialize error message
 
-// Check if the login form has been submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve data from the login form
     $password = $_POST['password'];
@@ -146,10 +145,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Course Code Field -->
                     <div class="mb-3">
                         <label for="courseCode" class="form-label">Course Code</label>
-                        <input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter the course_code" required>
+                        <input type="text" class="form-control" id="courseCode" name="courseCode" value="<?php echo htmlspecialchars($courseCode); ?>" required>
                     </div>
-
-                    <!-- Password Field -->
+                    <!-- ... -->
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>

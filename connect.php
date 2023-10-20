@@ -1,19 +1,10 @@
 <?php
-// Database configuration
-$dbConfig = [
-    'host' => 'localhost',
-    'dbname' => 'student',
-    'user' => 'root',
-    'password' => '',
-];
-
+// PHP Data Objects(PDO) Sample Code:
 try {
-    $conn = new PDO(
-        "mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']}",
-        $dbConfig['user'],
-        $dbConfig['password']
-    );
+    $conn = new PDO("sqlsrv:server = tcp:studnt-server.database.windows.net,1433; Database = studnt-database", "studnt-server-admin", "1P0T2F1KS6K6ZL4F$");
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+}
+catch (PDOException $e) {
+    print("Error connecting to SQL Server.");
+    die(print_r($e));
 }
