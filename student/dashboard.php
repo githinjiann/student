@@ -11,6 +11,30 @@
             background-color: skyblue;
         }
 
+
+           /* Custom style for the navbar and logo */
+        .navbar {
+            background-color: green;
+        }
+
+        .navbar img {
+            padding: 10px;
+            background-color: #4CAF50; /* Green background for the logo */
+            border-radius: 50%; /* Make the logo area a circle */
+        }
+
+        /* Custom class to set the navbar width */
+        .custom-navbar {
+            margin: auto;
+            max-width: 400px; /* Adjust the max-width as needed */
+        }
+
+        /* Apply margin-top to the entire page content */
+        body {
+            margin-top: 20px;
+        }
+
+
         .dashboard-frame {
             border: 1px solid #ccc;
             border-radius: 6px;
@@ -48,10 +72,14 @@
 
     </style>
 </head>
-<body>
-   <div class="col-md-12 text-center"> <!-- Apply the "text-center" class to center the content -->
-    <img src="image/logo.jpg" alt="Your Logo" class="img-fluid logo-img">
-</div>
+
+ <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="image/logo.jpg" alt="Your Logo" class="img-fluid logo-img">
+            </a>
+        </div>
+    </nav>
 
     <div class="container mt-4">
         <div class="row justify-content-center">

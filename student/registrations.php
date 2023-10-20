@@ -81,6 +81,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Add Bootstrap 4 CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+
+           /* Custom style for the navbar and logo */
+        .navbar {
+            background-color: green;
+        }
+
+        .navbar img {
+            padding: 10px;
+            background-color: #4CAF50; /* Green background for the logo */
+            border-radius: 50%; /* Make the logo area a circle */
+        }
+
+        /* Custom class to set the navbar width */
+        .custom-navbar {
+            margin: auto;
+            max-width: 400px; /* Adjust the max-width as needed */
+        }
+
+        /* Apply margin-top to the entire page content */
+        body {
+            margin-top: 20px;
+        }
+
+        
         .container {
             margin: 0 auto; /* Center the container horizontally */
         }
@@ -127,6 +151,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     
+<nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="image/logo.jpg" alt="Your Logo" class="img-fluid logo-img">
+            </a>
+        </div>
+    </nav>
     <div class="container mt-5">
         <!-- Success message popup initially hidden -->
         <div class="alert alert-success" id="successMessage" style="display: none;">
