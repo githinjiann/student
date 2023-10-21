@@ -9,28 +9,43 @@ if (isset($_GET['student_id']) && isset($_GET['semester']) && isset($_GET['confi
     $semester = $_GET['semester'];
 
     if ($_GET['confirm'] === "yes") {
-        // Query to delete the student
-        $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id AND semester = :semester";
+        // Check if the student has registered for multiple semesters
+        $checkMultipleSemestersSql = "SELECT COUNT(DISTINCT semester) AS semester_count FROM student_courses WHERE student_id = :student_id";
+        $checkStmt = $conn->prepare($checkMultipleSemestersSql);
+        $checkStmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
+        $checkStmt->execute();
+        $result = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        $semesterCount = $result['semester_count'];
+
+        if ($semesterCount > 1) {
+            // Delete all records for the student since they have registered for multiple semesters
+            $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id";
+        } else {
+            // Delete only the records for the specified semester
+            $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id AND semester = :semester";
+        }
+
+        // Execute the delete query
         $deleteStmt = $conn->prepare($deleteSql);
         $deleteStmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
-        $deleteStmt->bindParam(':semester', $semester, PDO::PARAM_STR);
-
-       if ($deleteStmt->execute()) {
-    // Student deleted successfully
-    echo "Student with ID $student_id in semester $semester has been deleted.";
-    
-    // Use JavaScript to redirect immediately after displaying the message
-    echo '<script>
-        window.location.href = "student_info.php";
-    </script>';
-} else {
-    // Error occurred during deletion
-    echo "Error deleting the student.";
-}
-
+        if ($semesterCount == 1) {
+            $deleteStmt->bindParam(':semester', $semester, PDO::PARAM_STR);
+        }
         
-        // Exit to prevent further execution
-        exit;
+        if ($deleteStmt->execute()) {
+            echo "Student with ID $student_id";
+            if ($semesterCount > 1) {
+                echo " for all semesters";
+            } else {
+                echo " in semester $semester";
+            }
+            echo " has been deleted.";
+            echo '<script>window.location.href = "student_info.php";</script>';
+        } else {
+            echo "Error deleting the student.";
+        }
+
+        exit; // Exit to prevent further execution
     }
 }
 
@@ -56,7 +71,7 @@ $studentCount = count($result);
             background-color: skyblue;
         }
 
-           /* Custom style for the navbar and logo */
+        /* Custom style for the navbar and logo */
         .navbar {
             background-color: green;
         }
@@ -83,7 +98,7 @@ $studentCount = count($result);
 
 <body>
 
- <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+<nav class="navbar navbar-expand-lg navbar-light custom-navbar">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="image/logo.jpg" alt="Your Logo" class="img-fluid logo-img">
