@@ -17,37 +17,46 @@ if (isset($_GET['student_id']) && isset($_GET['semester']) && isset($_GET['confi
         $result = $checkStmt->fetch(PDO::FETCH_ASSOC);
         $semesterCount = $result['semester_count'];
 
-        if ($semesterCount > 1) {
-            // Delete all records for the student since they have registered for multiple semesters
-            $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id";
-        } else {
-            // Delete only the records for the specified semester
-            $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id AND semester = :semester";
-        }
-
-        // Execute the delete query
-        $deleteStmt = $conn->prepare($deleteSql);
-        $deleteStmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
-        if ($semesterCount == 1) {
-            $deleteStmt->bindParam(':semester', $semester, PDO::PARAM_STR);
-        }
-        
-        if ($deleteStmt->execute()) {
-            echo "Student with ID $student_id";
+        try {
             if ($semesterCount > 1) {
-                echo " for all semesters";
+                // If the student has registered for multiple semesters, only delete the selected semester
+                $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id AND semester = :semester";
+                $deleteStmt = $conn->prepare($deleteSql);
+                $deleteStmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
+                $deleteStmt->bindParam(':semester', $semester, PDO::PARAM_STR);
             } else {
-                echo " in semester $semester";
+                // If the student has registered for only one semester, delete all records for that student
+                $deleteSql = "DELETE FROM student_courses WHERE student_id = :student_id";
+                $deleteStmt = $conn->prepare($deleteSql);
+                $deleteStmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
             }
-            echo " has been deleted.";
-            echo '<script>window.location.href = "student_info.php";</script>';
-        } else {
-            echo "Error deleting the student.";
-        }
 
-        exit; // Exit to prevent further execution
+            $deleteStmt->execute();
+
+            if ($deleteStmt->rowCount() > 0) {
+                echo '<script>
+                    alert("Student with ID ' . $student_id . ' has been deleted.");
+                    window.location.href = "student_info.php";
+                </script>';
+                exit; // Exit to prevent further execution
+            } else {
+                echo '<script>
+                    alert("No records were deleted for the student.");
+                    window.location.href = "student_info.php";
+                </script>';
+                exit; // Exit to prevent further execution
+            }
+        } catch (PDOException $e) {
+            echo '<script>
+                alert("Error deleting the student: ' . $e->getMessage() . '");
+                window.location.href = "student_info.php";
+            </script>';
+            exit; // Exit to prevent further execution
+        }
     }
 }
+
+// Rest of your code for displaying student information remains unchanged
 
 // Query to retrieve student registration information from the student_courses table
 $sql = "SELECT DISTINCT student_id, semester FROM student_courses";

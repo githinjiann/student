@@ -1,7 +1,7 @@
 <?php
 // Define the default credentials
 $defaultUsername = "ann";
-$defaultPassword = "ann1234";
+$defaultPassword = "123";
 
 // Initialize variables to hold error messages
 $errorMessage = "";

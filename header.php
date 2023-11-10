@@ -9,7 +9,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="index.php">Home</a>
                     </li>
-                    <!-- Modify the "Login" link to have an ID for easy access -->
+                
                     <li class="nav-item">
                         <a class="nav-link" href="login.php" id="login-link"> Student</a>
                     <li class="nav-item">

@@ -57,6 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Close the database connection (optional if not needed elsewhere)
 $conn = null;
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
