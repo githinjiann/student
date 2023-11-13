@@ -16,72 +16,91 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $courseCode = $_POST['code']; // Use the correct field name
     $password = $_POST['password'];
 
-    // Hash the password for security
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // Validate full name (at least two names)
+    $nameParts = explode(' ', $fullName);
+    if (count($nameParts) < 2) {
+        $registrationMessage = '<div class="alert alert-danger">Please enter at least two names for the full name.</div>';
+        // You might want to redirect the user back to the registration form or handle this in JavaScript
+    } else {
+        // Hash the password for security
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Store the user data in a session variable
-    $_SESSION['user_data'] = [
-        'fullName' => $fullName,
-        'email' => $email,
-        'course' => $course,
-        'courseCode' => $courseCode,
-    ];
+        // Check if the email is already registered
+        $checkEmailSql = "SELECT COUNT(*) FROM users WHERE email = :email";
+        $checkEmailStmt = $conn->prepare($checkEmailSql);
+        $checkEmailStmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $checkEmailStmt->execute();
+        $emailCount = $checkEmailStmt->fetchColumn();
 
-    // SQL query to insert user data into the database
-    $sql = "INSERT INTO users (full_name, email, course, course_code, password) VALUES (:fullName, :email, :course, :courseCode, :hashedPassword)";
+        if ($emailCount > 0) {
+            $registrationMessage = '<div class="alert alert-danger">This email is already registered. Please use a different email.</div>';
+            // You might want to redirect the user back to the registration form or handle this in JavaScript
+        } else {
+            // Store the user data in a session variable
+            $_SESSION['user_data'] = [
+                'fullName' => $fullName,
+                'email' => $email,
+                'course' => $course,
+                'courseCode' => $courseCode,
+            ];
 
-    try {
-        // Create a prepared statement
-        $stmt = $conn->prepare($sql);
+            // SQL query to insert user data into the database
+            $sql = "INSERT INTO users (full_name, email, course, course_code, password) VALUES (:fullName, :email, :course, :courseCode, :hashedPassword)";
 
-        // Bind parameters
-        $stmt->bindParam(':fullName', $fullName, PDO::PARAM_STR);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':course', $course, PDO::PARAM_STR);
-        $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR); // Use the correct parameter name
-        $stmt->bindParam(':hashedPassword', $hashedPassword, PDO::PARAM_STR);
+            try {
+                // Create a prepared statement
+                $stmt = $conn->prepare($sql);
 
-        // Execute the statement
-        $stmt->execute();
+                // Bind parameters
+                $stmt->bindParam(':fullName', $fullName, PDO::PARAM_STR);
+                $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $stmt->bindParam(':course', $course, PDO::PARAM_STR);
+                $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR); // Use the correct parameter name
+                $stmt->bindParam(':hashedPassword', $hashedPassword, PDO::PARAM_STR);
 
-        // Close the statement
-        $stmt = null;
+                // Execute the statement
+                $stmt->execute();
 
-        // Send a welcome email using PHPMailer
-        require './PHPMailer/src/PHPMailer.php';
-        require './PHPMailer/src/SMTP.php';
-        require './PHPMailer/src/Exception.php';
+                // Close the statement
+                $stmt = null;
 
-        $mail = new PHPMailer(true);
+                // Send a welcome email using PHPMailer
+                require './PHPMailer/src/PHPMailer.php';
+                require './PHPMailer/src/SMTP.php';
+                require './PHPMailer/src/Exception.php';
 
-        try {
-            $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = 'annndutaw2020@gmail.com';
-            $mail->Password   = 'iqpx finz mfqb cpzp';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-            $mail->Port       = 465;
+                $mail = new PHPMailer(true);
 
-            $mail->setFrom('annndutaw2020@gmail.com', 'Egerton University');
-            $mail->addAddress($email); // Use the email provided during registration
+                try {
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.gmail.com';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = 'annndutaw2020@gmail.com';
+                    $mail->Password   = 'iqpx finz mfqb cpzp';
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                    $mail->Port       = 465;
 
-            $mail->isHTML(true);
-            $mail->Subject = 'Welcome to Egerton University';
-            $mail->Body    = 'Dear ' . $fullName . ',<br> Welcome to Egerton University. Your course code is: ' . $courseCode;
-            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                    $mail->setFrom('annndutaw2020@gmail.com', 'Egerton University');
+                    $mail->addAddress($email); // Use the email provided during registration
 
-            $mail->send();
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Welcome to Egerton University';
+                    $mail->Body    = 'Dear ' . $fullName . ',<br> Welcome to Egerton University. Your course code is: ' . $courseCode;
+                    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
-            // Set a session variable indicating successful registration
-            $_SESSION['registration_success'] = true;
-    
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                    $mail->send();
+
+                    // Set a session variable indicating successful registration
+                    $_SESSION['registration_success'] = true;
+            
+                } catch (Exception $e) {
+                    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                }
+            } catch (PDOException $e) {
+                // Handle database errors here (e.g., log the error, display an error message)
+                $registrationMessage = '<div class="alert alert-danger">Database error: ' . $e->getMessage() . '</div>';
+            }
         }
-    } catch (PDOException $e) {
-        // Handle database errors here (e.g., log the error, display an error message)
-        $registrationMessage = '<div class="alert alert-danger">Database error: ' . $e->getMessage() . '</div>';
     }
 }
 
@@ -97,6 +116,9 @@ if (isset($_SESSION['registration_success']) && $_SESSION['registration_success'
 // Close the database connection (optional if not needed elsewhere)
 $conn = null;
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -154,7 +176,34 @@ $conn = null;
     </style>
 </head>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-skyblue">
+        <div class="container">
+            <a class="navbar-brand" href="#" style="font-weight: bold; font-family: georgia, sans-serif;">EGERTON UNIVERSITY</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">Home</a>
+                    </li>
+                
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php" id="login-link"> Student Login</a>
+                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.php">appy now </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
 <body class="wrapper">
+
+
+
     <div class="container mt-5">
         <h1 class="form-title">Student Registration Form</h1>
         <div class="row justify-content-center">
@@ -223,12 +272,20 @@ $conn = null;
         </div>
     </div>
 
+
+    
+
     <!-- Include Bootstrap JS and jQuery from a CDN or your project's local files -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- ... Previous HTML code ... -->
 
 <!-- JavaScript to show the success modal immediately after registration -->
+<!-- JavaScript to show the success modal and validate form before submission -->
+<!-- ... Previous HTML code ... -->
+
+<!-- JavaScript to show the success modal and validate form before submission -->
+<!-- JavaScript to show the success modal and validate form before submission -->
 <script>
     document.querySelectorAll('input[name="course"]').forEach(function(radio) {
         radio.addEventListener("change", function() {
@@ -244,17 +301,35 @@ $conn = null;
         });
     });
 
-    // Function to show the success modal
+    // Function to show the success modal and validate form before submission
     function showSuccessModal() {
-        $('#registrationSuccessModal').modal('show');
+        // Validate form before submission
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
 
-       
+        if (fullName === "" || email === "" || password === "") {
+            alert("Please fill in all the required fields.");
+            return false; // Prevent form submission
+        }
+
+        // Show the modal
+        $('#registrationSuccessModal').modal('show');
     }
+
+    // Handle the modal's "hidden" event and redirect to the login page
+    $('#registrationSuccessModal').on('hidden.bs.modal', function (e) {
+        redirectToLogin();  // Redirect after the modal is fully hidden
+    });
 
     // Function to redirect to the login page
     function redirectToLogin() {
         window.location.href = 'login.php';
     }
 </script>
+
+<!-- ... Remaining HTML code ... -->
+
+
 </body>
 </html>

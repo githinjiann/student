@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </li>
                     <!-- Modify the "Login" link to have an ID for easy access -->
                     <li class="nav-item">
-                        <a class="nav-link" href="login.php" id="login-link"> Student</a>
+                        <a class="nav-link" href="login.php" id="login-link"> Student Login</a>
                 
             </div>
         </div>

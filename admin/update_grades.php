@@ -1,6 +1,6 @@
 <?php
 // Start the session
-
+session_start();
 
 // Include your database connection
 require_once("../connect.php");
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title>Student Results</title>
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: skyblue;
         }
 
-           /* Custom style for the navbar and logo */
+        /* Custom style for the navbar and logo */
         .navbar {
             background-color: green;
         }
@@ -104,13 +104,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             margin-top: 20px;
         }
-
     </style>
 </head>
 
 <body>
-     
-<nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="image/logo.jpg" alt="Your Logo" class="img-fluid logo-img">
@@ -119,71 +118,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
 
     <div class="container mt-3">
-        <h2>Student Results</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>Unit Code</th>
-                    <th>Unit Name</th>
-                    <th>Semester</th>
-                    <th>Grades</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // Fetch student data from the database using PDO
-                $sql = "SELECT student_id, units, semester, grades FROM student_courses";
-                $stmt = $conn->prepare($sql);
-                if ($stmt->execute()) {
-                    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        <?php
+        // Fetch student data from the database using PDO
+        $sql = "SELECT student_id, semester, units, grades FROM student_courses";
+        $stmt = $conn->prepare($sql);
 
-                    if ($result) {
-                        foreach ($result as $row) {
-                            $studentId = $row['student_id'];
-                            $unitCode = $row['units'];
-                            $semester = $row['semester'];
-                            $grades = $row['grades'];
-                            $unitName = getUnitName($unitCode, $semester);
-                            ?>
+        if ($stmt->execute()) {
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                            <tr>
-                                <td><?= $studentId ?></td>
-                                <td><?= $unitCode ?></td>
-                                <td><?= $unitName ?></td>
-                                <td><?= $semester ?></td>
-                                <td>
-                                    <?= $grades ?>
-                                </td>
-                                <td>
-                                    <form method="POST" action="update_grades.php">
-                                        <input type="hidden" name="student_id" value="<?= $studentId ?>">
-                                        <input type="hidden" name="unit_code" value="<?= $unitCode ?>">
-                                        <input type="hidden" name="semester" value="<?= $semester ?>">
-                                        <select name="grades">
-                                            <option value="A" <?= ($grades === "A") ? "selected" : "" ?>>A</option>
-                                            <option value="B" <?= ($grades === "B") ? "selected" : "" ?>>B</option>
-                                            <option value="C" <?= ($grades === "C") ? "selected" : "" ?>>C</option>
-                                            <option value="D" <?= ($grades === "D") ? "selected" : "" ?>>D</option>
-                                            <option value="E" <?= ($grades === "E") ? "selected" : "" ?>>E</option>
-                                        </select>
-                                        <button type="submit">Update</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <?php
+            if ($result) {
+                $currentStudent = null;
+
+                foreach ($result as $row) {
+                    $studentId = $row['student_id'];
+                    $semester = $row['semester'];
+                    $grades = $row['grades'];
+                    $unitCode = $row['units'];
+                    $unitName = getUnitName($unitCode, $semester);
+
+                    // Display student details only when a new student is encountered
+                    if ($studentId !== $currentStudent) {
+                        if ($currentStudent !== null) {
+                            echo "</tbody>";
+                            echo "</table>";
                         }
-                    } else {
-                        echo "<tr><td colspan='6'>No records found</td></tr>";
+                        echo "<h2>Student Details</h2>";
+                        echo "<p>Student ID: $studentId</p>";
+                        echo "<p>Semester: $semester</p>";
+                        echo "<h2>Registered Units</h2>";
+                        echo "<table class='table'>";
+                        echo "<thead>";
+                        echo "<tr>";
+                        echo "<th>Unit Code</th>";
+                        echo "<th>Unit Name</th>";
+                        echo "<th>Grades</th>";
+                        echo "<th>Action</th>";
+                        echo "</tr>";
+                        echo "</thead>";
+                        echo "<tbody>";
+                        $currentStudent = $studentId;
                     }
-                } else {
-                    // Handle the query execution error
-                    echo "Error executing the query.";
+
+                    // Display unit information
+                    echo "<tr>";
+                    echo "<td>$unitCode</td>";
+                    echo "<td>$unitName</td>";
+                    echo "<td>$grades</td>";
+                    echo "<td>";
+                    echo "<form method='POST' action='update_grades.php'>";
+                    echo "<input type='hidden' name='student_id' value='$studentId'>";
+                    echo "<input type='hidden' name='semester' value='$semester'>";
+                    echo "<input type='hidden' name='unit_code' value='$unitCode'>";
+                    echo "<select name='grades'>";
+                    echo "<option value='A' " . (($grades === "A") ? "selected" : "") . ">A</option>";
+                    echo "<option value='B' " . (($grades === "B") ? "selected" : "") . ">B</option>";
+                    echo "<option value='C' " . (($grades === "C") ? "selected" : "") . ">C</option>";
+                    echo "<option value='D' " . (($grades === "D") ? "selected" : "") . ">D</option>";
+                    echo "<option value='E' " . (($grades === "E") ? "selected" : "") . ">E</option>";
+                    echo "</select>";
+                    echo "<button type='submit'>Update</button>";
+                    echo "</form>";
+                    echo "</td>";
+                    echo "</tr>";
                 }
-                ?>
-            </tbody>
-        </table>
+
+                echo "</tbody>";
+                echo "</table>";
+            } else {
+                echo "<p>No records found</p>";
+            }
+        } else {
+            // Handle the query execution error
+            echo "Error executing the query.";
+        }
+        ?>
     </div>
 
     <!-- Add Bootstrap JavaScript links here -->
