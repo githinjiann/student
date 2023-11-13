@@ -1,9 +1,9 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
 // Include the database connection file
 require_once('connect.php');
 
 session_start(); // Start the session
-
 
 $registrationMessage = ''; // Initialize an empty registration message
 
@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'course' => $course,
         'courseCode' => $courseCode,
     ];
+
     // SQL query to insert user data into the database
     $sql = "INSERT INTO users (full_name, email, course, course_code, password) VALUES (:fullName, :email, :course, :courseCode, :hashedPassword)";
 
@@ -45,14 +46,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Close the statement
         $stmt = null;
 
+        // Send a welcome email using PHPMailer
+       // Send a welcome email using PHPMailer
+require './PHPMailer/src/PHPMailer.php';
+require './PHPMailer/src/SMTP.php';
+require './PHPMailer/src/Exception.php';
+
+$mail = new PHPMailer(true);
+
+try {
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'annndutaw2020@gmail.com';
+    $mail->Password   = 'iqpx finz mfqb cpzp';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port       = 465;
+
+    $mail->setFrom('annndutaw2020@gmail.com', 'Egerton University');
+    $mail->addAddress($email); // Use the email provided during registration
+
+    $mail->isHTML(true);
+    $mail->Subject = 'Welcome to Egerton University';
+    $mail->Body    = 'Dear ' . $fullName . ',<br> Welcome to Egerton University. Your course code is: ' . $courseCode;
+    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $mail->send();
+    echo 'Message has been sent';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
+
+
         // Redirect to the login page immediately after successful registration
         header('Location: login.php');
         exit();
     } catch (PDOException $e) {
         // Handle database errors here (e.g., log the error, display an error message)
         $registrationMessage = '<div class="alert alert-danger">Database error: ' . $e->getMessage() . '</div>';
-    }
-}
+    }}
 
 // Close the database connection (optional if not needed elsewhere)
 $conn = null;
