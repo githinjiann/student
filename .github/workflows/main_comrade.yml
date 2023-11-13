@@ -62,5 +62,5 @@ jobs:
         with:
           app-name: 'comrade'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C61D1982C42144E69CEF2FBDB9BE9747 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1BE04663AA6D4BD9B560185671D180DA }}
           package: .
