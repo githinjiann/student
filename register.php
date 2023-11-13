@@ -73,9 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $mail->send();
 
-            // Redirect to the login page with success parameter
-            header('Location: login.php?success=true');
-            exit();
+            // Set a session variable indicating successful registration
+            $_SESSION['registration_success'] = true;
+    
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
@@ -83,6 +83,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Handle database errors here (e.g., log the error, display an error message)
         $registrationMessage = '<div class="alert alert-danger">Database error: ' . $e->getMessage() . '</div>';
     }
+}
+
+// Check if the registration success session variable is set
+if (isset($_SESSION['registration_success']) && $_SESSION['registration_success'] === true) {
+    // Display the success message
+    $registrationMessage = '<div class="alert alert-success">Registration successful! Please check your email for the course code.</div>';
+
+    // Clear the session variable to avoid showing the message on page refresh
+    unset($_SESSION['registration_success']);
 }
 
 // Close the database connection (optional if not needed elsewhere)
@@ -150,6 +159,9 @@ $conn = null;
         <h1 class="form-title">Student Registration Form</h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
+                <!-- Display the registration success message -->
+                <?php echo $registrationMessage; ?>
+
                 <form id="registrationForm" action="register.php" method="POST" class="custom-bg registration-details">
                     <div class="mb-3">
                         <label for="fullName" class="form-label">Full Name</label>
@@ -176,7 +188,7 @@ $conn = null;
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Register</button>
+                    <button type="submit" class="btn btn-primary btn-block" onclick="showSuccessModal()">Register</button>
                 </form>
             </div>
         </div>
@@ -199,13 +211,13 @@ $conn = null;
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="registrationSuccessModalLabel">Registration Successful</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    
                 </div>
                 <div class="modal-body">
                     Registration successful! Please check your email for the course code.
                 </div>
                 <div class="modal-footer">
-                    <a href="login.php" class="btn btn-primary">Go to Login</a>
+                    <button type="button" class="btn btn-primary" onclick="redirectToLogin()">OK</button>
                 </div>
             </div>
         </div>
@@ -214,35 +226,35 @@ $conn = null;
     <!-- Include Bootstrap JS and jQuery from a CDN or your project's local files -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        // JavaScript to generate the student code based on the selected course
-        document.querySelectorAll('input[name="course"]').forEach(function(radio) {
-            radio.addEventListener("change", function() {
-                const course = this.value;
-                let code = "";
-                const uniqueCode = Math.floor(Math.random() * 9000) + 1000;
-                const currentYear = new Date().getFullYear();
-                code += "B144/" + uniqueCode + "/" + currentYear;
-                if (course === "bachelor_it") {
-                    code = "B141/" + uniqueCode + "/" + currentYear;
-                }
-                document.getElementById("code").value = code;
-            });
-        });
+    <!-- ... Previous HTML code ... -->
 
-        // JavaScript to show the success modal if the success parameter is present in the URL
-        $(document).ready(function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const successParam = urlParams.get('success');
-
-            if (successParam === 'true') {
-                // Show the modal if the success parameter is true
-                $('#registrationSuccessModal').modal('show');
-
-                // Clear the URL parameter to prevent showing the modal on page refresh
-                history.replaceState(null, null, window.location.pathname);
+<!-- JavaScript to show the success modal immediately after registration -->
+<script>
+    document.querySelectorAll('input[name="course"]').forEach(function(radio) {
+        radio.addEventListener("change", function() {
+            const course = this.value;
+            let code = "";
+            const uniqueCode = Math.floor(Math.random() * 9000) + 1000;
+            const currentYear = new Date().getFullYear();
+            code += "B144/" + uniqueCode + "/" + currentYear;
+            if (course === "bachelor_it") {
+                code = "B141/" + uniqueCode + "/" + currentYear;
             }
+            document.getElementById("code").value = code;
         });
-    </script>
+    });
+
+    // Function to show the success modal
+    function showSuccessModal() {
+        $('#registrationSuccessModal').modal('show');
+
+       
+    }
+
+    // Function to redirect to the login page
+    function redirectToLogin() {
+        window.location.href = 'login.php';
+    }
+</script>
 </body>
 </html>
