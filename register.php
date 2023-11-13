@@ -287,19 +287,20 @@ $conn = null;
 <!-- JavaScript to show the success modal and validate form before submission -->
 <!-- JavaScript to show the success modal and validate form before submission -->
 <script>
-    document.querySelectorAll('input[name="course"]').forEach(function(radio) {
-        radio.addEventListener("change", function() {
-            const course = this.value;
-            let code = "";
-            const uniqueCode = Math.floor(Math.random() * 9000) + 1000;
-            const currentYear = new Date().getFullYear();
-            code += "B144/" + uniqueCode + "/" + currentYear;
-            if (course === "bachelor_it") {
-                code = "B141/" + uniqueCode + "/" + currentYear;
-            }
-            document.getElementById("code").value = code;
-        });
+   document.querySelectorAll('input[name="course"]').forEach(function(radio) {
+    radio.addEventListener("change", function() {
+        const course = this.value;
+        let code = "";
+        const uniqueCode = Math.floor(Math.random() * 9000) + 1000;
+        const currentYear = new Date().getFullYear();
+        code += "B144/" + uniqueCode + "/" + currentYear;
+        if (course === "bachelor_it") {
+            code = "B141/" + uniqueCode + "/" + currentYear;
+        }
+        document.getElementById("code").value = code;
     });
+});
+
 
     // Function to show the success modal and validate form before submission
     function showSuccessModal() {
