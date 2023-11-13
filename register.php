@@ -1,5 +1,6 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
+
 // Include the database connection file
 require_once('connect.php');
 
@@ -47,49 +48,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = null;
 
         // Send a welcome email using PHPMailer
-       // Send a welcome email using PHPMailer
-require './PHPMailer/src/PHPMailer.php';
-require './PHPMailer/src/SMTP.php';
-require './PHPMailer/src/Exception.php';
+        require './PHPMailer/src/PHPMailer.php';
+        require './PHPMailer/src/SMTP.php';
+        require './PHPMailer/src/Exception.php';
 
-$mail = new PHPMailer(true);
+        $mail = new PHPMailer(true);
 
-try {
-    $mail->isSMTP();
-    $mail->Host       = 'smtp.gmail.com';
-    $mail->SMTPAuth   = true;
-    $mail->Username   = 'annndutaw2020@gmail.com';
-    $mail->Password   = 'iqpx finz mfqb cpzp';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail->Port       = 465;
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'annndutaw2020@gmail.com';
+            $mail->Password   = 'iqpx finz mfqb cpzp';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = 465;
 
-    $mail->setFrom('annndutaw2020@gmail.com', 'Egerton University');
-    $mail->addAddress($email); // Use the email provided during registration
+            $mail->setFrom('annndutaw2020@gmail.com', 'Egerton University');
+            $mail->addAddress($email); // Use the email provided during registration
 
-    $mail->isHTML(true);
-    $mail->Subject = 'Welcome to Egerton University';
-    $mail->Body    = 'Dear ' . $fullName . ',<br> Welcome to Egerton University. Your course code is: ' . $courseCode;
-    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $mail->isHTML(true);
+            $mail->Subject = 'Welcome to Egerton University';
+            $mail->Body    = 'Dear ' . $fullName . ',<br> Welcome to Egerton University. Your course code is: ' . $courseCode;
+            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
-    $mail->send();
-    echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-}
+            $mail->send();
 
-
-        // Redirect to the login page immediately after successful registration
-        header('Location: login.php');
-        exit();
+            // Redirect to the login page with success parameter
+            header('Location: login.php?success=true');
+            exit();
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
     } catch (PDOException $e) {
         // Handle database errors here (e.g., log the error, display an error message)
         $registrationMessage = '<div class="alert alert-danger">Database error: ' . $e->getMessage() . '</div>';
-    }}
+    }
+}
 
 // Close the database connection (optional if not needed elsewhere)
 $conn = null;
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -99,78 +97,53 @@ $conn = null;
     <title>Registration Form</title>
     <!-- Include Bootstrap CSS from a CDN or your project's local files -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
- <style>
-    .navbar.bg-skyblue {
-        background-color: skyblue;
-    }
+    <style>
+        .navbar.bg-skyblue {
+            background-color: skyblue;
+        }
 
-    /* Styling for the title */
-    .form-title {
-        text-align: center;
-        color: green;
-        font-weight: bold;
-        margin-top: 0; /* Remove the margin-top */
-    }
+        /* Styling for the title */
+        .form-title {
+            text-align: center;
+            color: green;
+            font-weight: bold;
+            margin-top: 0; /* Remove the margin-top */
+        }
 
-    .custom-bg {
-        background-color: #f0f0f0;
-    }
+        .custom-bg {
+            background-color: #f0f0f0;
+        }
 
-    .registration-details {
-        background-color: white;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-    }
+        .registration-details {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+        }
 
-    /* Sticky footer */
-    html, body {
-        height: 100%;
-    }
+        /* Sticky footer */
+        html, body {
+            height: 100%;
+        }
 
-    .wrapper {
-        min-height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
+        .wrapper {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
-    .container {
-        flex: 1;
-    }
+        .container {
+            flex: 1;
+        }
 
-    .footer {
-        background-color: black;
-        color: white;
-        text-align: center;
-        padding: 20px 0;
-    }
-</style>
-
+        .footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+    </style>
 </head>
-
-
-<nav class="navbar navbar-expand-lg navbar-light bg-skyblue">
-        <div class="container">
-            <a class="navbar-brand" href="#" style="font-weight: bold; font-family: georgia, sans-serif;">EGERTON UNIVERSITY</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
-                    </li>
-                    <!-- Modify the "Login" link to have an ID for easy access -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php" id="login-link"> Student Login</a>
-                   
-                   
-
-                </ul>
-            </div>
-        </div>
-    </nav>
-
 
 <body class="wrapper">
     <div class="container mt-5">
@@ -183,7 +156,7 @@ $conn = null;
                         <input type="text" class="form-control" id="fullName" name="fullName" required>
                     </div>
                     <div class="mb-3">
-                        <label for "email" class="form-label">Email</label>
+                        <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="mb-3">
@@ -220,19 +193,19 @@ $conn = null;
         </div>
     </footer>
 
-    <!-- Bootstrap Modal for the password mismatch error message -->
-    <div class="modal fade" id="passwordMismatchModal" tabindex="-1" aria-labelledby="passwordMismatchModalLabel" aria-hidden="true">
+    <!-- Registration Success Modal -->
+    <div class="modal fade" id="registrationSuccessModal" tabindex="-1" aria-labelledby="registrationSuccessModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="passwordMismatchModalLabel">Error</h5>
+                    <h5 class="modal-title" id="registrationSuccessModalLabel">Registration Successful</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Passwords do not match. Please go back and try again.
+                    Registration successful! Please check your email for the course code.
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                    <a href="login.php" class="btn btn-primary">Go to Login</a>
                 </div>
             </div>
         </div>
@@ -256,7 +229,20 @@ $conn = null;
                 document.getElementById("code").value = code;
             });
         });
+
+        // JavaScript to show the success modal if the success parameter is present in the URL
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const successParam = urlParams.get('success');
+
+            if (successParam === 'true') {
+                // Show the modal if the success parameter is true
+                $('#registrationSuccessModal').modal('show');
+
+                // Clear the URL parameter to prevent showing the modal on page refresh
+                history.replaceState(null, null, window.location.pathname);
+            }
+        });
     </script>
 </body>
-
-</html>     
+</html>
