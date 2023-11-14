@@ -26,11 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_student_id']))
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title>View Student</title>
     <!-- Add Bootstrap CSS links here -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -38,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_student_id']))
     <div class="container mt-3">
         <h2>View Student</h2>
         <form method="POST" id="deleteForm">
-            <label for="delete_student_id">Select Student to Delete:</label>
+            <label for="delete_student_id" class="form-label">Select Student to Delete:</label>
             <select name="delete_student_id" id="delete_student_id" class="form-select" onchange="updateDeleteFormAction()">
                 <?php
                 // Query to retrieve student information from the students table using PDO
@@ -56,40 +57,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_student_id']))
                 }
                 ?>
             </select>
-            <button type="submit" class="btn btn-danger">Delete Student</button>
+            <button type="submit" class="btn btn-danger mt-2">Delete Student</button>
         </form>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Department</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // Query to retrieve student information from the students table using PDO
-                $selectSql = "SELECT student_id, name, email, department FROM students";
+        <div class="table-responsive mt-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Query to retrieve student information from the students table using PDO
+                    $selectSql = "SELECT student_id, name, email, department FROM students";
 
-                try {
-                    $selectStmt = $conn->prepare($selectSql);
-                    $selectStmt->execute();
+                    try {
+                        $selectStmt = $conn->prepare($selectSql);
+                        $selectStmt->execute();
 
-                    while ($row = $selectStmt->fetch(PDO::FETCH_ASSOC)) {
-                        echo "<tr>";
-                        echo "<td>" . $row["student_id"] . "</td>";
-                        echo "<td>" . $row["name"] . "</td>";
-                        echo "<td>" . $row["email"] . "</td>";
-                        echo "<td>" . $row["department"] . "</td>";
-                        echo "</tr>";
+                        while ($row = $selectStmt->fetch(PDO::FETCH_ASSOC)) {
+                            echo "<tr>";
+                            echo "<td>" . $row["student_id"] . "</td>";
+                            echo "<td>" . $row["name"] . "</td>";
+                            echo "<td>" . $row["email"] . "</td>";
+                            echo "<td>" . $row["department"] . "</td>";
+                            echo "</tr>";
+                        }
+                    } catch (PDOException $e) {
+                        echo "Error: " . $e->getMessage();
                     }
-                } catch (PDOException $e) {
-                    echo "Error: " . $e->getMessage();
-                }
-                ?>
-            </tbody>
-        </table>
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Add Bootstrap JavaScript links here -->

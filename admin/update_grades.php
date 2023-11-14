@@ -35,6 +35,8 @@ function getUnitName($unitCode, $semester)
 }
 
 // Check if the form is submitted
+
+// Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the data from the submitted form
     $studentId = $_POST['student_id'];
@@ -146,6 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo "<p>Student ID: $studentId</p>";
                         echo "<p>Semester: $semester</p>";
                         echo "<h2>Registered Units</h2>";
+                        echo "<div class='table-responsive'>";
                         echo "<table class='table'>";
                         echo "<thead>";
                         echo "<tr>";
@@ -169,14 +172,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo "<input type='hidden' name='student_id' value='$studentId'>";
                     echo "<input type='hidden' name='semester' value='$semester'>";
                     echo "<input type='hidden' name='unit_code' value='$unitCode'>";
-                    echo "<select name='grades'>";
+                    echo "<select name='grades' class='form-select'>";
                     echo "<option value='A' " . (($grades === "A") ? "selected" : "") . ">A</option>";
                     echo "<option value='B' " . (($grades === "B") ? "selected" : "") . ">B</option>";
                     echo "<option value='C' " . (($grades === "C") ? "selected" : "") . ">C</option>";
                     echo "<option value='D' " . (($grades === "D") ? "selected" : "") . ">D</option>";
                     echo "<option value='E' " . (($grades === "E") ? "selected" : "") . ">E</option>";
                     echo "</select>";
-                    echo "<button type='submit'>Update</button>";
+                    echo "<button type='submit' class='btn btn-primary'>Update</button>";
                     echo "</form>";
                     echo "</td>";
                     echo "</tr>";
@@ -184,6 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 echo "</tbody>";
                 echo "</table>";
+                echo "</div>";
             } else {
                 echo "<p>No records found</p>";
             }
