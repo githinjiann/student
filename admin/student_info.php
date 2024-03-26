@@ -110,7 +110,7 @@ $studentCount = count($result);
 <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="image/logo.jpg" alt="Your Logo" class="img-fluid logo-img">
+                <img src="image/log.jpg" alt="Your Logo" class="img-fluid logo-img">
             </a>
         </div>
     </nav>

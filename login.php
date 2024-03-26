@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <nav class="navbar navbar-expand-lg navbar-light bg-skyblue">
         <div class="container">
-            <a class="navbar-brand" href="#" style="font-weight: bold; font-family: georgia, sans-serif;">EGERTON UNIVERSITY</a>
+            <a class="navbar-brand" href="#" style="font-weight: bold; font-family: georgia, sans-serif;">UNIVERSITY OF EMBU</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="wrapper">
     <div class="col-md-3 image-container mx-auto mt-3">
-        <img src="image/picture.jpg" alt="Image 2" class="img-fluid">
+        <img src="image/embu.jpg" alt="Image 2" class="img-fluid">
     </div>
 
     <div class="container">

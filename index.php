@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>University Homepage</title>
+    <title>University of Embu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     <!-- Custom CSS for sky blue background -->
@@ -43,17 +43,27 @@
     <?php include("header.php"); ?>
     <div class="container mt-4">
         <!-- Your page content goes here -->
-        <h1>Welcome to Our University</h1>
-        <p>The Egerton Agricultural College Ordinance was enacted in 1955. In 1979, the Government of Kenya and the United States Agency for International Development (USAID) funded a major expansion of the institution. In 1986, Egerton Agricultural College was gazetted as a constituent college of the University of Nairobi. The following year, 1987, marked the establishment of Egerton University through an Act of Parliament. Egerton University Act of 1987 was repealed and replaced by the Universities Act No. 42 of 2012 and chartered afresh in 2013.
-
-            Egerton University is headquartered at Njoro main campus. The main campus also houses the Faculties of Agriculture, Arts and Social Sciences, Education and Community Studies, Engineering and Technology, Environment and Resources Development, Science and Veterinary Medicine & Surgery.</p>
+        <h1>Welcome Universityof Embu</h1>
+        <p>The University of Embu is a public chartered World-class University that seeks to generate,
+advance and disseminate knowledge through training, research and innovation for the
+development of humanity. The University of Embu (UoEm) was initially established as
+Embu University College, a Constituent College of the University of Nairobi through Legal
+Notice No.65 of 17th June, 2011 by the Former President H.E Mwai Kibaki. The College is
+the legal succession of the former Embu Agricultural Staff Training (EAST) College, which
+was an agricultural staff college under the Ministry of Agriculture. The predecessor of East
+College, the Embu Institute of Agriculture was started in 1947 as an Agricultural Training
+School, and later renamed Embu Institute of Agriculture. On 7th October 2016, University
+of Embu was established and formally awarded Charter by the fourth President of the
+Republic of Kenya, H.E. President Uhuru Kenyatta transitioning the Institution from a
+Constituent College of University of Nairobi to a fully- fledged University.
+.</p>
 
         <div class="row">
             <div class="col-md-6 image-container">
-                <img src="image/picture.jpg" alt="Image 1" class="img-fluid">
+                <img src="image/embu.jpg" alt="Image 1" class="img-fluid">
             </div>
             <div class="col-md-6 image-container">
-                <img src="image/picture.jpg" alt="Image 2" class="img-fluid">
+                <img src="image/embu.jpg" alt="Image 2" class="img-fluid">
             </div>
         </div>
 

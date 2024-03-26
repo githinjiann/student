@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-skyblue">
         <div class="container">
-            <a class="navbar-brand" href="#" style="font-weight: bold; font-family: georgia, sans-serif;">EGERTON UNIVERSITY</a>
+            <a class="navbar-brand" href="#" style="font-weight: bold; font-family: georgia, sans-serif;">UNIVERSITY OF EMBU</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
