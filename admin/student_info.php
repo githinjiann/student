@@ -81,9 +81,7 @@ $studentCount = count($result);
         }
 
         /* Custom style for the navbar and logo */
-        .navbar {
-            background-color: green;
-        }
+       
 
         .navbar img {
             padding: 10px;

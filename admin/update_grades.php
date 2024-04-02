@@ -86,9 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* Custom style for the navbar and logo */
-        .navbar {
-            background-color: green;
-        }
+        
 
         .navbar img {
             padding: 10px;
