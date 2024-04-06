@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /* Custom class to set the navbar width */
         .custom-navbar {
             margin: auto;
-            max-width: 400px; /* Adjust the max-width as needed */
+            max-width: 399px; /* Adjust the max-width as needed */
         }
 
         /* Apply margin-top to the entire page content */
